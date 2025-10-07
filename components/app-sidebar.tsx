@@ -3,18 +3,10 @@
 import * as React from 'react';
 import {
 	IconDashboard,
-	IconDatabase,
 	IconFolder,
 	IconBuildingCastle,
-	IconListDetails,
-	IconReport,
 	IconSettings,
-	IconUsers,
-	IconShoppingCart,
-	IconPackage,
-	IconTruck,
 	IconBuilding,
-	IconFileInvoice,
 } from '@tabler/icons-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -35,7 +27,7 @@ const data = {
 	navMain: [
 		{
 			title: 'Dashboard',
-			url: '/app/dashboard',
+			url: '/app',
 			icon: IconDashboard,
 		},
 		{
@@ -44,29 +36,14 @@ const data = {
 			icon: IconBuildingCastle,
 		},
 		{
-			title: 'Applications',
-			url: '/app/applications',
-			icon: IconFileInvoice,
-		},
-		{
-			title: 'Companies',
-			url: '/app/companies',
-			icon: IconBuilding,
-		},
-		{
-			title: 'Contacts',
-			url: '/app/contacts',
-			icon: IconUsers,
-		},
-		{
 			title: 'Documents',
 			url: '/app/documents',
 			icon: IconFolder,
 		},
 		{
-			title: 'Analytics',
-			url: '/app/analytics',
-			icon: IconReport,
+			title: 'Companies',
+			url: '/app/companies',
+			icon: IconBuilding,
 		},
 	],
 	navClouds: [],
@@ -89,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						<SidebarMenuButton
 							asChild
 							className="data-[slot=sidebar-menu-button]:!p-1.5">
-							<Link href="/app/dashboard">
+							<Link href="/app">
 								<IconBuildingCastle className="!size-5" />
 								<span className="text-base font-semibold">JobTrackr</span>
 							</Link>

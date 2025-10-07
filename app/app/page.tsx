@@ -1,11 +1,16 @@
+import { DashboardContent } from '@/components/dashboard/dashboard-content';
+
 const AppPage = () => {
-  return (
-    <div>
-      <div className="flex flex-1 min-h-screen items-center justify-center">
-        Dashboard content here
-      </div>
-    </div>
-  );
-}
+	return (
+		<div>
+			<div className="flex-1 space-y-4 p-8 pt-6">
+				<div className="flex items-center justify-between space-y-2">
+					<h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+				</div>
+				<DashboardContent />
+			</div>
+		</div>
+	);
+};
 
 export default AppPage;

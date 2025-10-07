@@ -30,31 +30,16 @@ export function NavMain({
 	// Function to check if a navigation item is active
 	const isActive = (url: string) => {
 		// Handle exact matches and nested routes
-		if (url === '/app/dashboard' && pathname === '/app/dashboard') {
+		if (url === '/app' && pathname === '/app') {
 			return true;
 		}
-		if (url === '/app/warehouses' && pathname.startsWith('/app/warehouses')) {
+		if (url === '/app/jobs' && pathname.startsWith('/app/jobs')) {
 			return true;
 		}
 		if (url === '/app/products' && pathname.startsWith('/app/products')) {
 			return true;
 		}
-		if (url === '/app/categories' && pathname.startsWith('/app/categories')) {
-			return true;
-		}
-		if (url === '/app/orders' && pathname.startsWith('/app/orders')) {
-			return true;
-		}
-		if (url === '/app/customers' && pathname.startsWith('/app/customers')) {
-			return true;
-		}
-		if (url === '/app/stock' && pathname.startsWith('/app/stock')) {
-			return true;
-		}
-		if (url === '/app/storefront' && pathname.startsWith('/app/storefront')) {
-			return true;
-		}
-		if (url === '/app/vendors' && pathname.startsWith('/app/vendors')) {
+		if (url === '/app/documents' && pathname.startsWith('/app/documents')) {
 			return true;
 		}
 

@@ -21,7 +21,12 @@ interface Job {
 	description?: string;
 	company_name: string;
 	location?: string;
-	job_type?: 'full-time' | 'part-time' | 'contract' | 'internship' | 'freelance';
+	job_type?:
+		| 'full-time'
+		| 'part-time'
+		| 'contract'
+		| 'internship'
+		| 'freelance';
 	work_mode?: 'remote' | 'hybrid' | 'onsite';
 	salary_min?: number;
 	salary_max?: number;
@@ -29,7 +34,14 @@ interface Job {
 	job_url?: string;
 	company_url?: string;
 	linkedin_url?: string;
-	status: 'saved' | 'applied' | 'interviewing' | 'offered' | 'rejected' | 'accepted' | 'withdrawn';
+	status:
+		| 'saved'
+		| 'applied'
+		| 'interviewing'
+		| 'offered'
+		| 'rejected'
+		| 'accepted'
+		| 'withdrawn';
 	deadline?: string;
 	special_requirements?: string;
 	skills?: string[];
@@ -151,7 +163,9 @@ export function JobsList() {
 			render: (value: unknown, row: Job) => (
 				<div>
 					<div className="font-medium">{String(value)}</div>
-					<div className="text-xs text-muted-foreground">{row.company_name}</div>
+					<div className="text-xs text-muted-foreground">
+						{row.company_name}
+					</div>
 				</div>
 			),
 		},
@@ -164,14 +178,36 @@ export function JobsList() {
 				</Badge>
 			),
 		},
+		// {
+		// 	key: 'location',
+		// 	header: 'Location',
+		// 	render: (value: unknown) => (
+		// 		<span className="max-w-xs truncate block">
+		// 			{value ? String(value) : '-'}
+		// 		</span>
+		// 	),
+		// },
 		{
-			key: 'location',
-			header: 'Location',
-			render: (value: unknown) => (
-				<span className="max-w-xs truncate block">
-					{value ? String(value) : '-'}
-				</span>
-			),
+			key: 'salary_min',
+			header: 'Min Salary',
+			render: (value: unknown, row: Job) => {
+				const salaryMin = row.salary_min;
+				const salaryMax = row.salary_max;
+
+				if (!salaryMin && !salaryMax) return <span>-</span>;
+				if (salaryMin && salaryMax) {
+					return (
+						<span className="max-w-xs truncate block">
+							{salaryMin} - {salaryMax} {row.salary_currency || 'USD'}
+						</span>
+					);
+				}
+				return (
+					<span className="max-w-xs truncate block">
+						{salaryMin || salaryMax} {row.salary_currency || 'USD'}
+					</span>
+				);
+			},
 		},
 		{
 			key: 'job_type',
@@ -241,7 +277,7 @@ export function JobsList() {
 								Add Job
 							</Button>
 						</SheetTrigger>
-						<SheetContent className='w-full sm:min-w-3xl'>
+						<SheetContent className="w-full sm:min-w-3xl">
 							<div className="h-full">
 								<JobForm onSuccess={handleCreateSuccess} />
 							</div>
@@ -274,7 +310,7 @@ export function JobsList() {
 
 			{/* View Sheet */}
 			<Sheet open={viewSheetOpen} onOpenChange={setViewSheetOpen}>
-				<SheetContent className='w-full sm:min-w-3xl'>
+				<SheetContent className="w-full sm:min-w-3xl">
 					<div className="h-full">
 						{viewingJob && (
 							<JobView
@@ -290,13 +326,10 @@ export function JobsList() {
 
 			{/* Edit Sheet */}
 			<Sheet open={editSheetOpen} onOpenChange={setEditSheetOpen}>
-				<SheetContent className='w-full sm:min-w-3xl'>
+				<SheetContent className="w-full sm:min-w-3xl">
 					<div className="h-full">
 						{editingJob && (
-							<JobEditForm
-								job={editingJob}
-								onSuccess={handleEditSuccess}
-							/>
+							<JobEditForm job={editingJob} onSuccess={handleEditSuccess} />
 						)}
 					</div>
 				</SheetContent>
