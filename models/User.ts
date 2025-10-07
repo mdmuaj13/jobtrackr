@@ -24,6 +24,14 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			default: null,
 		},
+		resetPasswordToken: {
+			type: String,
+			default: null,
+		},
+		resetPasswordExpires: {
+			type: Date,
+			default: null,
+		},
 		deletedAt: {
 			type: Date,
 			default: null,
@@ -35,16 +43,27 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre('save', async function (next) {
-	if (!this.isModified('password')) return next();
+	if (!this.isModified('password')) {
+		return next();
+	}
 
-	this.password = await bcrypt.hash(this.password, 12);
-	next();
+	try {
+		this.password = await bcrypt.hash(this.password, 12);
+		next();
+	} catch (error) {
+		next(error as Error);
+	}
 });
 
 UserSchema.methods.comparePassword = async function (candidatePassword: string) {
 	return bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+// Delete the existing model if it exists to ensure schema updates are applied
+if (mongoose.models.User) {
+	delete mongoose.models.User;
+}
+
+const User = mongoose.model('User', UserSchema);
 
 export default User;

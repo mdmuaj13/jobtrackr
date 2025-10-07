@@ -17,6 +17,7 @@ interface IJob {
 	application_link?: string;
 	application_process?: string;
 	status: 'saved' | 'applied' | 'interviewing' | 'offered' | 'rejected' | 'accepted' | 'withdrawn';
+	applied_date?: Date;
 	deadline?: Date;
 	special_requirements?: string;
 	skills?: string[];
@@ -54,6 +55,7 @@ const jobSchema = new Schema<IJob>(
 			enum: ['saved', 'applied', 'interviewing', 'offered', 'rejected', 'accepted', 'withdrawn'],
 			default: 'saved'
 		},
+		applied_date: { type: Date, default: null },
 		deadline: { type: Date },
 		special_requirements: { type: String },
 		skills: [{ type: String }],

@@ -23,6 +23,7 @@ interface EntityViewProps<T> {
 	onSuccess?: () => void;
 	deleteFunction: (id: string) => Promise<void>;
 	children: ReactNode;
+	customActions?: ReactNode;
 }
 
 export function EntityView<T extends { _id: string }>({
@@ -35,6 +36,7 @@ export function EntityView<T extends { _id: string }>({
 	onSuccess,
 	deleteFunction,
 	children,
+	customActions,
 }: EntityViewProps<T>) {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -71,6 +73,11 @@ export function EntityView<T extends { _id: string }>({
 				</div>
 
 				<SheetFooter className="gap-2 px-0 mt-auto">
+					{customActions && (
+						<div className="w-full">
+							{customActions}
+						</div>
+					)}
 					<div className="flex gap-2 w-full">
 						<Button
 							type="button"

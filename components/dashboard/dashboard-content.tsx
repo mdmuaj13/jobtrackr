@@ -4,9 +4,15 @@ import { useDashboardStats } from '@/hooks/dashboard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { IconBriefcase, IconCalendar, IconChecks, IconClock } from '@tabler/icons-react';
+import {
+	IconBriefcase,
+	IconCalendar,
+	IconChecks,
+	IconClock,
+} from '@tabler/icons-react';
 import { SimpleTable } from '@/components/simple-table';
 import { useRouter } from 'next/navigation';
+import { JobStatsChart } from '@/components/dashboard/job-stats-chart';
 
 interface Job {
 	_id: string;
@@ -14,6 +20,7 @@ interface Job {
 	company_name: string;
 	location?: string;
 	job_type?: string;
+	applied_date?: string;
 	deadline?: string;
 	createdAt: string;
 	status?: string;
@@ -52,26 +59,10 @@ export function DashboardContent() {
 			render: (value: unknown, row: Job) => (
 				<div>
 					<div className="font-medium">{String(value)}</div>
-					<div className="text-xs text-muted-foreground">{row.company_name}</div>
+					<div className="text-xs text-muted-foreground">
+						{row.company_name}
+					</div>
 				</div>
-			),
-		},
-		{
-			key: 'status',
-			header: 'Status',
-			render: (value: unknown) => (
-				<Badge variant="outline" className={getStatusColor(String(value))}>
-					{String(value).charAt(0).toUpperCase() + String(value).slice(1)}
-				</Badge>
-			),
-		},
-		{
-			key: 'location',
-			header: 'Location',
-			render: (value: unknown) => (
-				<span className="max-w-xs truncate block">
-					{value ? String(value) : '-'}
-				</span>
 			),
 		},
 		{
@@ -151,62 +142,74 @@ export function DashboardContent() {
 
 	return (
 		<div className="space-y-6">
-			{/* Stats Cards */}
+			{/* Stats Cards and Pie Chart Grid */}
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-				<Card className="border-l-4 border-l-[hsl(var(--chart-1))]">
+				<Card className="border-l-4 border-l-green-500 bg-gradient-to-br from-green-500/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">Applied Jobs</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-1))]/10 p-2">
-							<IconChecks className="h-4 w-4 text-[hsl(var(--chart-1))]" />
+						<div className="rounded-full bg-green-500/20 p-2">
+							<IconChecks className="h-4 w-4 text-green-600" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-1))]">{stats?.applied || 0}</div>
+						<div className="text-3xl font-bold text-green-600">
+							{stats?.applied || 0}
+						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Jobs you&apos;ve applied to
 						</p>
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-[hsl(var(--chart-3))]">
+				<Card className="border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-500/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">Yet to Apply</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-3))]/10 p-2">
-							<IconBriefcase className="h-4 w-4 text-[hsl(var(--chart-3))]" />
+						<div className="rounded-full bg-blue-500/20 p-2">
+							<IconBriefcase className="h-4 w-4 text-blue-600" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-3))]">{stats?.notApplied || 0}</div>
+						<div className="text-3xl font-bold text-blue-600">
+							{stats?.notApplied || 0}
+						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Saved jobs not applied
 						</p>
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-destructive">
+				<Card className="border-l-4 border-l-orange-500 bg-gradient-to-br from-orange-500/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Deadline Today</CardTitle>
-						<div className="rounded-full bg-destructive/10 p-2">
-							<IconClock className="h-4 w-4 text-destructive" />
+						<CardTitle className="text-sm font-medium">
+							Deadline Today
+						</CardTitle>
+						<div className="rounded-full bg-orange-500/20 p-2">
+							<IconClock className="h-4 w-4 text-orange-600" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-destructive">{stats?.deadlineToday || 0}</div>
+						<div className="text-3xl font-bold text-orange-600">
+							{stats?.deadlineToday || 0}
+						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Applications due today
 						</p>
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-[hsl(var(--chart-4))]">
+				<Card className="border-l-4 border-l-purple-500 bg-gradient-to-br from-purple-500/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Deadline This Week</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-4))]/10 p-2">
-							<IconCalendar className="h-4 w-4 text-[hsl(var(--chart-4))]" />
+						<CardTitle className="text-sm font-medium">
+							Deadline This Week
+						</CardTitle>
+						<div className="rounded-full bg-purple-500/20 p-2">
+							<IconCalendar className="h-4 w-4 text-purple-600" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-4))]">{stats?.deadlineWeek || 0}</div>
+						<div className="text-3xl font-bold text-purple-600">
+							{stats?.deadlineWeek || 0}
+						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Due within 7 days
 						</p>
@@ -215,28 +218,35 @@ export function DashboardContent() {
 			</div>
 
 			{/* Recent Not Applied Jobs Table */}
-			<Card className="border-t-2 border-t-[hsl(var(--chart-3))]">
-				<CardHeader className="bg-gradient-to-r from-[hsl(var(--chart-3))]/5 to-transparent">
-					<CardTitle className="flex items-center gap-2">
-						<span className="h-5 w-1 bg-[hsl(var(--chart-3))] rounded-full"></span>
-						Recent Jobs Not Applied
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					{recentJobs.length === 0 ? (
-						<p className="text-sm text-muted-foreground text-center py-8">
-							No saved jobs found. Start adding jobs to track!
-						</p>
-					) : (
-						<SimpleTable
-							data={recentJobs}
-							columns={columns}
-							actions={actions}
-							showPagination={false}
-						/>
-					)}
-				</CardContent>
-			</Card>
+			<div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
+				<div className="lg:col-span-2">
+					<Card className="border-t-2 border-t-[hsl(var(--chart-3))]">
+						<CardHeader className="bg-gradient-to-r from-[hsl(var(--chart-3))]/5 to-transparent">
+							<CardTitle className="flex items-center gap-2">
+								<span className="h-5 w-1 bg-[hsl(var(--chart-3))] rounded-full"></span>
+								Recent Jobs Not Applied
+							</CardTitle>
+						</CardHeader>
+						<CardContent>
+							{recentJobs.length === 0 ? (
+								<p className="text-sm text-muted-foreground text-center py-8">
+									No saved jobs found. Start adding jobs to track!
+								</p>
+							) : (
+								<SimpleTable
+									data={recentJobs}
+									columns={columns}
+									actions={actions}
+									showPagination={false}
+								/>
+							)}
+						</CardContent>
+					</Card>
+				</div>
+				<div className="lg:col-span-1">
+					<JobStatsChart />
+				</div>
+			</div>
 
 			{/* Rejected Jobs Table */}
 			<Card className="border-t-2 border-t-destructive">

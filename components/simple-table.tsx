@@ -41,6 +41,8 @@ interface Action<T = unknown> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
   size?: "default" | "sm" | "lg" | "icon"
   disabled?: (row: T) => boolean
+  show?: (row: T) => boolean
+  loading?: (row: T) => boolean
 }
 
 interface Column<T = unknown> {
@@ -88,17 +90,24 @@ export function SimpleTable<T = unknown>({
         header: "Actions",
         cell: ({ row }: { row: { original: T } }) => (
           <div className="flex items-center gap-2">
-            {actions.map((action, index) => (
-              <Button
-                key={index}
-                variant={action.variant || "outline"}
-                size={action.size || "sm"}
-                onClick={() => action.onClick(row.original)}
-                disabled={action.disabled ? action.disabled(row.original) : false}
-              >
-                {action.label}
-              </Button>
-            ))}
+            {actions
+              .filter((action) => !action.show || action.show(row.original))
+              .map((action, index) => {
+                const isLoading = action.loading ? action.loading(row.original) : false
+                return (
+                  <Button
+                    key={index}
+                    variant={action.variant || "outline"}
+                    size={action.size || "sm"}
+                    onClick={() => action.onClick(row.original)}
+                    disabled={
+                      isLoading || (action.disabled ? action.disabled(row.original) : false)
+                    }
+                  >
+                    {isLoading ? "Loading..." : action.label}
+                  </Button>
+                )
+              })}
           </div>
         ),
         enableSorting: false,

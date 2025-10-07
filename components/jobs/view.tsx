@@ -1,9 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { deleteJob } from '@/hooks/jobs';
 import { EntityView } from '@/components/ui/entity-view';
 import { ViewField, formatDate } from '@/components/ui/view-field';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { Check } from 'lucide-react';
 
 interface Job {
 	_id: string;
@@ -20,6 +24,7 @@ interface Job {
 	company_url?: string;
 	linkedin_url?: string;
 	status: 'saved' | 'applied' | 'interviewing' | 'offered' | 'rejected' | 'accepted' | 'withdrawn';
+	applied_date?: string;
 	deadline?: string;
 	special_requirements?: string;
 	skills?: string[];
@@ -82,11 +87,44 @@ const formatSalary = (min?: number, max?: number, currency?: string) => {
 };
 
 export function JobView({
-	job,
+	job: initialJob,
 	onEdit,
 	onDelete,
 	onSuccess,
 }: JobViewProps) {
+	const [job, setJob] = useState(initialJob);
+	const [isMarkingApplied, setIsMarkingApplied] = useState(false);
+
+	const handleMarkAsApplied = async () => {
+		setIsMarkingApplied(true);
+		try {
+			const response = await fetch(`/api/jobs/${job._id}/mark-applied`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to mark job as applied');
+			}
+
+			const result = await response.json();
+
+			// Update local job state with the updated job data
+			if (result.data) {
+				setJob(result.data);
+			}
+
+			toast.success('Job marked as applied');
+			onSuccess?.();
+		} catch {
+			toast.error('Failed to mark job as applied');
+		} finally {
+			setIsMarkingApplied(false);
+		}
+	};
+
 	return (
 		<EntityView
 			title="Job Details"
@@ -96,7 +134,19 @@ export function JobView({
 			onEdit={onEdit}
 			onDelete={onDelete}
 			onSuccess={onSuccess}
-			deleteFunction={deleteJob}>
+			deleteFunction={deleteJob}
+			customActions={
+				job.status === 'saved' ? (
+					<Button
+						onClick={handleMarkAsApplied}
+						disabled={isMarkingApplied}
+						className="w-full"
+					>
+						<Check className="h-4 w-4 mr-2" />
+						{isMarkingApplied ? 'Marking...' : 'Mark as Applied'}
+					</Button>
+				) : undefined
+			}>
 			<ViewField
 				label="Job Title"
 				value={<p className="text-sm font-semibold">{job.title}</p>}
@@ -137,6 +187,19 @@ export function JobView({
 						<Badge variant={getStatusBadgeVariant(job.status)}>
 							{formatStatus(job.status)}
 						</Badge>
+					}
+				/>
+
+				<ViewField
+					label="Applied Date"
+					value={
+						<p className="text-sm">
+							{job.applied_date ? new Date(job.applied_date).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric',
+							}) : 'Not applied yet'}
+						</p>
 					}
 				/>
 

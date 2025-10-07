@@ -75,30 +75,38 @@ export async function PUT(
 			return ApiSerializer.notFound('Job not found');
 		}
 
+		// Prepare update object
+		const updateData: any = {
+			...(title !== undefined && { title }),
+			...(description !== undefined && { description }),
+			...(company_name !== undefined && { company_name }),
+			...(company_id !== undefined && { company_id: company_id || undefined }),
+			...(location !== undefined && { location }),
+			...(job_type !== undefined && { job_type }),
+			...(work_mode !== undefined && { work_mode }),
+			...(salary_min !== undefined && { salary_min }),
+			...(salary_max !== undefined && { salary_max }),
+			...(salary_currency !== undefined && { salary_currency }),
+			...(job_url !== undefined && { job_url: job_url || undefined }),
+			...(company_url !== undefined && { company_url: company_url || undefined }),
+			...(linkedin_url !== undefined && { linkedin_url: linkedin_url || undefined }),
+			...(application_link !== undefined && { application_link: application_link || undefined }),
+			...(application_process !== undefined && { application_process }),
+			...(status !== undefined && { status }),
+			...(deadline !== undefined && { deadline: deadline ? new Date(deadline) : undefined }),
+			...(special_requirements !== undefined && { special_requirements }),
+			...(skills !== undefined && { skills }),
+			...(notes !== undefined && { notes }),
+		};
+
+		// If status is changing to 'applied' and there's no existing applied_date, set it
+		if (status === 'applied' && !job.applied_date) {
+			updateData.applied_date = new Date();
+		}
+
 		const updatedJob = await Job.findByIdAndUpdate(
 			id,
-			{
-				...(title !== undefined && { title }),
-				...(description !== undefined && { description }),
-				...(company_name !== undefined && { company_name }),
-				...(company_id !== undefined && { company_id: company_id || undefined }),
-				...(location !== undefined && { location }),
-				...(job_type !== undefined && { job_type }),
-				...(work_mode !== undefined && { work_mode }),
-				...(salary_min !== undefined && { salary_min }),
-				...(salary_max !== undefined && { salary_max }),
-				...(salary_currency !== undefined && { salary_currency }),
-				...(job_url !== undefined && { job_url: job_url || undefined }),
-				...(company_url !== undefined && { company_url: company_url || undefined }),
-				...(linkedin_url !== undefined && { linkedin_url: linkedin_url || undefined }),
-				...(application_link !== undefined && { application_link: application_link || undefined }),
-				...(application_process !== undefined && { application_process }),
-				...(status !== undefined && { status }),
-				...(deadline !== undefined && { deadline: deadline ? new Date(deadline) : undefined }),
-				...(special_requirements !== undefined && { special_requirements }),
-				...(skills !== undefined && { skills }),
-				...(notes !== undefined && { notes }),
-			},
+			updateData,
 			{ new: true }
 		).populate('company_id', 'name logo_url');
 

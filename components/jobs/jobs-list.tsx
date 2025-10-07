@@ -42,6 +42,7 @@ interface Job {
 		| 'rejected'
 		| 'accepted'
 		| 'withdrawn';
+	applied_date?: string;
 	deadline?: string;
 	special_requirements?: string;
 	skills?: string[];
@@ -226,6 +227,12 @@ export function JobsList() {
 					{value ? String(value) : '-'}
 				</span>
 			),
+		},
+		{
+			key: 'applied_date',
+			header: 'Applied Date',
+			render: (value: unknown) =>
+				value ? new Date(String(value)).toLocaleDateString() : '-',
 		},
 		{
 			key: 'deadline',
