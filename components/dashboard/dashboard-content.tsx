@@ -163,7 +163,7 @@ export function DashboardContent() {
 					<CardContent>
 						<div className="text-3xl font-bold text-[hsl(var(--chart-1))]">{stats?.applied || 0}</div>
 						<p className="text-xs text-muted-foreground mt-1">
-							Jobs you've applied to
+							Jobs you&apos;ve applied to
 						</p>
 					</CardContent>
 				</Card>

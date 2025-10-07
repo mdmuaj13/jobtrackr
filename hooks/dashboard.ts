@@ -24,7 +24,7 @@ interface DashboardData {
 }
 
 export function useDashboardStats() {
-	const { data, error, isLoading, mutate } = useApi<DashboardData>('/api/dashboard/stats');
+	const { data, error, isLoading, mutate } = useApi('/api/dashboard/stats');
 
 	return {
 		data: data?.data,

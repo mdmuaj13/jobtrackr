@@ -173,7 +173,7 @@ export function JobsList() {
 			key: 'status',
 			header: 'Status',
 			render: (value: unknown) => (
-				<Badge variant={getStatusVariant(String(value)) as any}>
+				<Badge variant={getStatusVariant(String(value)) as 'default' | 'secondary' | 'destructive' | 'outline'}>
 					{String(value).charAt(0).toUpperCase() + String(value).slice(1)}
 				</Badge>
 			),

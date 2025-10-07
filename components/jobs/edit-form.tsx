@@ -137,8 +137,8 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 				description: formData.description || undefined,
 				company_name: formData.company_name,
 				location: formData.location || undefined,
-				job_type: formData.job_type || undefined,
-				work_mode: formData.work_mode || undefined,
+				job_type: (formData.job_type || undefined) as 'full-time' | 'part-time' | 'contract' | 'internship' | 'freelance' | undefined,
+				work_mode: (formData.work_mode || undefined) as 'remote' | 'hybrid' | 'onsite' | undefined,
 				salary_min: formData.salary_min
 					? parseFloat(formData.salary_min)
 					: undefined,
@@ -149,7 +149,7 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 				job_url: formData.job_url || undefined,
 				company_url: formData.company_url || undefined,
 				linkedin_url: formData.linkedin_url || undefined,
-				status: formData.status as any,
+				status: formData.status as 'saved' | 'applied' | 'interviewing' | 'offered' | 'rejected' | 'accepted' | 'withdrawn',
 				deadline: formData.deadline || undefined,
 				special_requirements: formData.special_requirements || undefined,
 				skills: formData.skills
