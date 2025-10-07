@@ -1,6 +1,6 @@
 import { Briefcase, Sparkles } from 'lucide-react';
 
-import { ResetPasswordForm } from '@/components/reset-password-form';
+import { ResetPasswordForm } from '@/components/auth/reset-password-form';
 import GuestGuard from '@/components/guest-guard';
 import Image from 'next/image';
 import Link from 'next/link';

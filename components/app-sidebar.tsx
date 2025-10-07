@@ -36,8 +36,8 @@ const data = {
 			icon: IconBuildingCastle,
 		},
 		{
-			title: 'Documents',
-			url: '/app/documents',
+			title: 'Calendar',
+			url: '/app/calendar',
 			icon: IconFolder,
 		},
 		{

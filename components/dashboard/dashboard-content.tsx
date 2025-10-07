@@ -31,27 +31,6 @@ export function DashboardContent() {
 	const { data, isLoading, error } = useDashboardStats();
 	const router = useRouter();
 
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case 'saved':
-				return 'bg-secondary text-secondary-foreground border-secondary';
-			case 'applied':
-				return 'bg-[hsl(var(--chart-1))]/10 text-[hsl(var(--chart-1))] border-[hsl(var(--chart-1))]/20';
-			case 'interviewing':
-				return 'bg-[hsl(var(--chart-4))]/10 text-[hsl(var(--chart-4))] border-[hsl(var(--chart-4))]/20';
-			case 'offered':
-				return 'bg-[hsl(var(--chart-2))]/10 text-[hsl(var(--chart-2))] border-[hsl(var(--chart-2))]/20';
-			case 'rejected':
-				return 'bg-destructive/10 text-destructive border-destructive/20';
-			case 'accepted':
-				return 'bg-[hsl(var(--chart-2))]/20 text-[hsl(var(--chart-2))] border-[hsl(var(--chart-2))]/30 font-semibold';
-			case 'withdrawn':
-				return 'bg-muted text-muted-foreground border-border';
-			default:
-				return 'bg-secondary text-secondary-foreground border-secondary';
-		}
-	};
-
 	const columns = [
 		{
 			key: 'title',

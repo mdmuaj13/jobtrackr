@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,52 +9,34 @@ import { apiCall } from '@/lib/api';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-interface ResetPasswordFormProps extends React.ComponentProps<'form'> {
-	token: string;
-}
-
-export function ResetPasswordForm({
-	token,
+export function ForgotPasswordForm({
 	className,
 	...props
-}: ResetPasswordFormProps) {
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
+}: React.ComponentProps<'form'>) {
+	const [email, setEmail] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState(false);
-	const router = useRouter();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
 		setError('');
 
-		if (password !== confirmPassword) {
-			setError('Passwords do not match');
-			setLoading(false);
-			return;
-		}
-
-		if (password.length < 6) {
-			setError('Password must be at least 6 characters');
-			setLoading(false);
-			return;
-		}
-
 		try {
-			const data = await apiCall('/api/auth/reset-password', {
+			const data = await apiCall('/api/auth/forgot-password', {
 				method: 'POST',
-				body: JSON.stringify({ token, password }),
+				body: JSON.stringify({ email }),
 			});
 
 			if (data.status_code === 200) {
 				setSuccess(true);
-				setTimeout(() => {
-					router.push('/login');
-				}, 2000);
+				// In development, show the reset URL
+				if (process.env.NODE_ENV === 'development' && data.data?.resetUrl) {
+					console.log('Reset URL:', data.data.resetUrl);
+				}
 			} else {
-				setError(data.message || 'Failed to reset password');
+				setError(data.message || 'Failed to send reset email');
 			}
 		} catch {
 			setError('Something went wrong. Please try again.');
@@ -66,7 +47,7 @@ export function ResetPasswordForm({
 
 	if (success) {
 		return (
-			<div className={cn('flex flex-col gap-6', className)} {...props}>
+			<div className={cn('flex flex-col gap-6', className)}>
 				<div className="flex flex-col items-center gap-2 text-center">
 					<div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-full mb-2">
 						<svg
@@ -82,11 +63,18 @@ export function ResetPasswordForm({
 							/>
 						</svg>
 					</div>
-					<h1 className="text-2xl font-bold">Password reset successful!</h1>
+					<h1 className="text-2xl font-bold">Check your email</h1>
 					<p className="text-muted-foreground text-sm text-balance">
-						Your password has been reset. Redirecting to login...
+						If an account exists with <strong>{email}</strong>, you will receive
+						a password reset link shortly.
 					</p>
 				</div>
+				<Button asChild variant="outline" className="w-full">
+					<Link href="/login" className="flex items-center gap-2">
+						<ArrowLeft className="w-4 h-4" />
+						Back to Login
+					</Link>
+				</Button>
 			</div>
 		);
 	}
@@ -97,9 +85,10 @@ export function ResetPasswordForm({
 			onSubmit={handleSubmit}
 			{...props}>
 			<div className="flex flex-col items-center gap-2 text-center">
-				<h1 className="text-2xl font-bold">Set new password</h1>
+				<h1 className="text-2xl font-bold">Forgot your password?</h1>
 				<p className="text-muted-foreground text-sm text-balance">
-					Enter your new password below
+					Enter your email address and we&apos;ll send you a link to reset your
+					password
 				</p>
 			</div>
 			{error && (
@@ -109,31 +98,18 @@ export function ResetPasswordForm({
 			)}
 			<div className="grid gap-6">
 				<div className="grid gap-3">
-					<Label htmlFor="password">New Password</Label>
+					<Label htmlFor="email">Email</Label>
 					<Input
-						id="password"
-						type="password"
-						placeholder="Enter new password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						id="email"
+						type="email"
+						placeholder="m@example.com"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
 						required
-						minLength={6}
-					/>
-				</div>
-				<div className="grid gap-3">
-					<Label htmlFor="confirmPassword">Confirm Password</Label>
-					<Input
-						id="confirmPassword"
-						type="password"
-						placeholder="Confirm new password"
-						value={confirmPassword}
-						onChange={(e) => setConfirmPassword(e.target.value)}
-						required
-						minLength={6}
 					/>
 				</div>
 				<Button type="submit" className="w-full" disabled={loading}>
-					{loading ? 'Resetting...' : 'Reset password'}
+					{loading ? 'Sending...' : 'Send reset link'}
 				</Button>
 			</div>
 			<div className="text-center text-sm">

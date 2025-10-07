@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Check } from 'lucide-react';
+import { updateJob } from '@/hooks/jobs';
+
 
 interface Job {
 	_id: string;
@@ -98,23 +100,9 @@ export function JobView({
 	const handleMarkAsApplied = async () => {
 		setIsMarkingApplied(true);
 		try {
-			const response = await fetch(`/api/jobs/${job._id}/mark-applied`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to mark job as applied');
-			}
-
-			const result = await response.json();
-
-			// Update local job state with the updated job data
-			if (result.data) {
-				setJob(result.data);
-			}
+			const submitData = { status: 'applied' as const };
+			const updatedJob = await updateJob(job._id, submitData);
+			setJob((prev) => ({ ...prev, ...updatedJob }));
 
 			toast.success('Job marked as applied');
 			onSuccess?.();

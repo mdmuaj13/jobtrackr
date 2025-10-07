@@ -1,48 +1,39 @@
-import mongoose from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const UserSchema = new mongoose.Schema(
+interface IUser {
+	name: string;
+	email: string;
+	password: string;
+	role: string;
+	image?: string;
+	resetPasswordToken?: string;
+	resetPasswordExpires?: Date;
+	createdAt: Date;
+	updatedAt: Date;
+	deletedAt?: Date;
+	comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+const userSchema = new Schema<IUser>(
 	{
-		name: {
-			type: String,
-			required: true,
-		},
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		password: {
-			type: String,
-			required: true,
-		},
-		role: {
-			type: String,
-			default: 'admin',
-		},
-		image: {
-			type: String,
-			default: null,
-		},
-		resetPasswordToken: {
-			type: String,
-			default: null,
-		},
-		resetPasswordExpires: {
-			type: Date,
-			default: null,
-		},
-		deletedAt: {
-			type: Date,
-			default: null,
-		},
+		name: { type: String, required: true },
+		email: { type: String, required: true, unique: true },
+		password: { type: String, required: true },
+		role: { type: String, default: 'admin' },
+		image: { type: String, default: null },
+		resetPasswordToken: { type: String, default: null },
+		resetPasswordExpires: { type: Date, default: null },
+		deletedAt: { type: Date, default: null },
 	},
 	{
 		timestamps: true,
 	}
 );
 
-UserSchema.pre('save', async function (next) {
+userSchema.index({ deletedAt: 1 });
+
+userSchema.pre('save', async function (next) {
 	if (!this.isModified('password')) {
 		return next();
 	}
@@ -55,15 +46,10 @@ UserSchema.pre('save', async function (next) {
 	}
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword: string) {
+userSchema.methods.comparePassword = async function (candidatePassword: string) {
 	return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Delete the existing model if it exists to ensure schema updates are applied
-if (mongoose.models.User) {
-	delete mongoose.models.User;
-}
-
-const User = mongoose.model('User', UserSchema);
+const User = models.User || model<IUser>('User', userSchema);
 
 export default User;

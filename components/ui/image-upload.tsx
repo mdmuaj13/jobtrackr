@@ -5,6 +5,7 @@ import { Upload, X } from 'lucide-react';
 import { Spinner } from './shadcn-io/spinner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
 
 interface ImageUploadProps {
 	title?: string;
@@ -129,10 +130,11 @@ export default function ImageUpload({
 
 						{imagePreview ? (
 							<div className="relative w-full h-full group">
-								<img
+								<Image
 									src={imagePreview}
 									alt="Preview"
-									className="w-full h-full object-cover rounded-lg"
+									fill
+									className="object-cover rounded-lg"
 								/>
 								<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
 									<Button
