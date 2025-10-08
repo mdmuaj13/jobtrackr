@@ -9,6 +9,9 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Check } from 'lucide-react';
 import { updateJob } from '@/hooks/jobs';
+import { EventList } from '@/components/events/event-list';
+import { Timeline } from '@/components/activities/timeline';
+import { Separator } from '@/components/ui/separator';
 
 
 interface Job {
@@ -23,14 +26,10 @@ interface Job {
 	salary_max?: number;
 	salary_currency?: string;
 	job_url?: string;
-	company_url?: string;
 	linkedin_url?: string;
 	status: 'saved' | 'applied' | 'interviewing' | 'offered' | 'rejected' | 'accepted' | 'withdrawn';
 	applied_date?: string;
 	deadline?: string;
-	special_requirements?: string;
-	skills?: string[];
-	application_link?: string;
 	application_process?: string;
 	notes?: string;
 	createdAt: string;
@@ -155,15 +154,6 @@ export function JobView({
 			/>
 
 			<ViewField
-				label="Special Requirements"
-				value={
-					<p className="text-sm whitespace-pre-wrap">
-						{job.special_requirements || 'No special requirements'}
-					</p>
-				}
-			/>
-
-			<ViewField
 				label="Location"
 				value={<p className="text-sm">{job.location || 'Not provided'}</p>}
 			/>
@@ -238,23 +228,6 @@ export function JobView({
 			/>
 
 			<ViewField
-				label="Company Website"
-				value={
-					job.company_url ? (
-						<a
-							href={job.company_url}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="text-sm text-blue-600 hover:underline break-all">
-							{job.company_url}
-						</a>
-					) : (
-						<p className="text-sm">Not provided</p>
-					)
-				}
-			/>
-
-			<ViewField
 				label="LinkedIn URL"
 				value={
 					job.linkedin_url ? (
@@ -272,45 +245,11 @@ export function JobView({
 			/>
 
 			<ViewField
-				label="Application Link"
-				value={
-					job.application_link ? (
-						<a
-							href={job.application_link}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="text-sm text-blue-600 hover:underline break-all">
-							{job.application_link}
-						</a>
-					) : (
-						<p className="text-sm">Not provided</p>
-					)
-				}
-			/>
-
-			<ViewField
 				label="Application Process"
 				value={
 					<p className="text-sm whitespace-pre-wrap">
 						{job.application_process || 'No application process details'}
 					</p>
-				}
-			/>
-
-			<ViewField
-				label="Skills"
-				value={
-					job.skills && job.skills.length > 0 ? (
-						<div className="flex flex-wrap gap-2">
-							{job.skills.map((skill, index) => (
-								<Badge key={index} variant="outline">
-									{skill}
-								</Badge>
-							))}
-						</div>
-					) : (
-						<p className="text-sm">No skills listed</p>
-					)
 				}
 			/>
 
@@ -333,6 +272,18 @@ export function JobView({
 					label="Last Updated"
 					value={<p className="text-sm">{formatDate(job.updatedAt)}</p>}
 				/>
+			</div>
+
+			{/* Activity Timeline Section */}
+			<div className="mt-6 pt-6 border-t">
+				<Timeline jobId={job._id} />
+			</div>
+
+			<Separator className="my-6" />
+
+			{/* Events & Deadlines Section */}
+			<div className="mt-6">
+				<EventList jobId={job._id} />
 			</div>
 		</EntityView>
 	);

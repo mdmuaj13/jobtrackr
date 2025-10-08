@@ -4,6 +4,7 @@ import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import { authenticateToken } from '@/lib/auth';
 import { createJobSchema } from '@/lib/validations/job';
+import { logActivity, getActivityDetailsForStatus } from '@/lib/helpers/activity-logger';
 
 export async function GET(request: NextRequest) {
 	try {
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 	try {
-		const { error: authError } = await authenticateToken(request);
+		const { error: authError, user } = await authenticateToken(request);
 		console.log(authError);
 		if (authError) return authError;
 
@@ -121,11 +122,22 @@ export async function POST(request: NextRequest) {
 			linkedin_url: linkedin_url || undefined,
 			application_link: application_link || undefined,
 			application_process,
-			status,
+			status: status || 'saved',
 			deadline: deadline ? new Date(deadline) : undefined,
 			special_requirements,
 			skills,
 			notes,
+			user_id: user?.id,
+		});
+
+		// Auto-log initial activity when job is created
+		const activityDetails = getActivityDetailsForStatus(undefined, status || 'saved');
+		await logActivity({
+			job_id: job._id,
+			user_id: user?.id,
+			activity_type: activityDetails.activity_type,
+			title: activityDetails.title,
+			description: activityDetails.description,
 		});
 
 		return ApiSerializer.created(job, 'Job created successfully');

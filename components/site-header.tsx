@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { IconInnerShadowTop } from '@tabler/icons-react';
+import { IconBrandGithub } from '@tabler/icons-react';
 import Link from 'next/link';
 
 export function SiteHeader({ title = '' }: { title?: string }) {
@@ -13,10 +13,10 @@ export function SiteHeader({ title = '' }: { title?: string }) {
 					className="mx-2 data-[orientation=vertical]:h-4"
 				/>
 				<h1 className="text-base font-medium">{title}</h1>
-				<div className="ml-auto flex items-center gap-2">
-					<Link href="/app" className="flex items-center gap-2">
-						<IconInnerShadowTop className="!size-5" />
-						<span className="text-base font-semibold">Jobtrackr</span>
+				<div className="ml-auto flex items-center gap-2 hover:underline">
+					<Link href="https://github.com/mdmuaj13" className="flex items-center gap-2">
+						<IconBrandGithub className="!size-5" />
+						<span className="text-base font-semibold">@mdmuaj13</span>
 					</Link>
 				</div>
 			</div>

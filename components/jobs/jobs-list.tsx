@@ -190,7 +190,7 @@ export function JobsList() {
 		// },
 		{
 			key: 'salary_min',
-			header: 'Min Salary',
+			header: 'Salary Range',
 			render: (value: unknown, row: Job) => {
 				const salaryMin = row.salary_min;
 				const salaryMax = row.salary_max;

@@ -4,6 +4,7 @@ import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import { authenticateToken } from '@/lib/auth';
 import { updateJobSchema } from '@/lib/validations/job';
+import { logActivity, getActivityDetailsForStatus } from '@/lib/helpers/activity-logger';
 
 export async function GET(
 	request: NextRequest,
@@ -75,6 +76,8 @@ export async function PUT(
 			return ApiSerializer.notFound('Job not found');
 		}
 
+		const oldStatus = job.status;
+
 		// Prepare update object
 		const updateData: Record<string, unknown> = {
 			...(title !== undefined && { title }),
@@ -109,6 +112,18 @@ export async function PUT(
 			updateData,
 			{ new: true }
 		).populate('company_id', 'name logo_url');
+
+		// Auto-log activity if status changed
+		if (status && status !== oldStatus) {
+			const activityDetails = getActivityDetailsForStatus(oldStatus, status);
+			await logActivity({
+				job_id: id,
+				user_id: job.user_id,
+				activity_type: activityDetails.activity_type,
+				title: activityDetails.title,
+				description: activityDetails.description,
+			});
+		}
 
 		return ApiSerializer.success(updatedJob, 'Job updated successfully');
 	} catch {

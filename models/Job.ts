@@ -22,6 +22,7 @@ interface IJob {
 	special_requirements?: string;
 	skills?: string[];
 	notes?: string;
+	user_id?: Schema.Types.ObjectId;
 	createdAt: Date;
 	updatedAt: Date;
 	deletedAt?: Date;
@@ -60,6 +61,7 @@ const jobSchema = new Schema<IJob>(
 		special_requirements: { type: String },
 		skills: [{ type: String }],
 		notes: { type: String },
+		user_id: { type: Schema.Types.ObjectId, ref: 'User' },
 		deletedAt: { type: Date, default: null },
 	},
 	{
@@ -74,6 +76,7 @@ jobSchema.index({ status: 1 });
 jobSchema.index({ job_type: 1 });
 jobSchema.index({ work_mode: 1 });
 jobSchema.index({ deadline: 1 });
+jobSchema.index({ user_id: 1 });
 jobSchema.index({ deletedAt: 1 });
 
 const Job = models.Job || model<IJob>('Job', jobSchema);

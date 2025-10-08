@@ -39,7 +39,6 @@ interface Job {
 	salary_max?: number;
 	salary_currency?: string;
 	job_url?: string;
-	company_url?: string;
 	linkedin_url?: string;
 	status:
 		| 'saved'
@@ -50,9 +49,6 @@ interface Job {
 		| 'accepted'
 		| 'withdrawn';
 	deadline?: string;
-	special_requirements?: string;
-	skills?: string[];
-	application_link?: string;
 	application_process?: string;
 	notes?: string;
 	createdAt: string;
@@ -75,13 +71,9 @@ interface FormData {
 	salary_max: string;
 	salary_currency: string;
 	job_url: string;
-	company_url: string;
 	linkedin_url: string;
 	status: string;
 	deadline: string;
-	special_requirements: string;
-	skills: string;
-	application_link: string;
 	application_process: string;
 	notes: string;
 }
@@ -99,13 +91,9 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 		salary_max: job.salary_max?.toString() || '',
 		salary_currency: job.salary_currency || 'USD',
 		job_url: job.job_url || '',
-		company_url: job.company_url || '',
 		linkedin_url: job.linkedin_url || '',
 		status: job.status,
 		deadline: job.deadline ? job.deadline.split('T')[0] : '',
-		special_requirements: job.special_requirements || '',
-		skills: job.skills?.join(', ') || '',
-		application_link: job.application_link || '',
 		application_process: job.application_process || '',
 		notes: job.notes || '',
 	});
@@ -137,8 +125,18 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 				description: formData.description || undefined,
 				company_name: formData.company_name,
 				location: formData.location || undefined,
-				job_type: (formData.job_type || undefined) as 'full-time' | 'part-time' | 'contract' | 'internship' | 'freelance' | undefined,
-				work_mode: (formData.work_mode || undefined) as 'remote' | 'hybrid' | 'onsite' | undefined,
+				job_type: (formData.job_type || undefined) as
+					| 'full-time'
+					| 'part-time'
+					| 'contract'
+					| 'internship'
+					| 'freelance'
+					| undefined,
+				work_mode: (formData.work_mode || undefined) as
+					| 'remote'
+					| 'hybrid'
+					| 'onsite'
+					| undefined,
 				salary_min: formData.salary_min
 					? parseFloat(formData.salary_min)
 					: undefined,
@@ -147,18 +145,16 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 					: undefined,
 				salary_currency: formData.salary_currency || undefined,
 				job_url: formData.job_url || undefined,
-				company_url: formData.company_url || undefined,
 				linkedin_url: formData.linkedin_url || undefined,
-				status: formData.status as 'saved' | 'applied' | 'interviewing' | 'offered' | 'rejected' | 'accepted' | 'withdrawn',
+				status: formData.status as
+					| 'saved'
+					| 'applied'
+					| 'interviewing'
+					| 'offered'
+					| 'rejected'
+					| 'accepted'
+					| 'withdrawn',
 				deadline: formData.deadline || undefined,
-				special_requirements: formData.special_requirements || undefined,
-				skills: formData.skills
-					? formData.skills
-							.split(',')
-							.map((s) => s.trim())
-							.filter(Boolean)
-					: undefined,
-				application_link: formData.application_link || undefined,
 				application_process: formData.application_process || undefined,
 				notes: formData.notes || undefined,
 			};
@@ -197,16 +193,29 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 					/>
 				</div>
 
-				<div className="space-y-2">
-					<Label htmlFor="company_name">Company Name *</Label>
-					<Input
-						id="company_name"
-						name="company_name"
-						placeholder="Enter company name"
-						value={formData.company_name}
-						onChange={handleChange}
-						required
-					/>
+				<div className="grid grid-cols-2 gap-4">
+					<div className="space-y-2">
+						<Label htmlFor="company_name">Company Name *</Label>
+						<Input
+							id="company_name"
+							name="company_name"
+							placeholder="Enter company name"
+							value={formData.company_name}
+							onChange={handleChange}
+							required
+						/>
+					</div>
+
+					<div className="space-y-2">
+						<Label htmlFor="location">Location</Label>
+						<Input
+							id="location"
+							name="location"
+							placeholder="e.g. New York, NY or Remote"
+							value={formData.location}
+							onChange={handleChange}
+						/>
+					</div>
 				</div>
 
 				<div className="space-y-2">
@@ -222,40 +231,16 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 					/>
 				</div>
 
-				<div className="space-y-2">
-					<Label htmlFor="special_requirements">Special Requirements</Label>
-					<Textarea
-						id="special_requirements"
-						name="special_requirements"
-						placeholder="Enter any special requirements"
-						value={formData.special_requirements}
-						onChange={handleChange}
-						rows={3}
-						className="resize-none"
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label htmlFor="location">Location</Label>
-					<Input
-						id="location"
-						name="location"
-						placeholder="e.g. New York, NY or Remote"
-						value={formData.location}
-						onChange={handleChange}
-					/>
-				</div>
-
 				<div className="grid grid-cols-3 gap-4">
 					<div className="space-y-2">
 						<Label htmlFor="status">Status</Label>
 						<Select
 							value={formData.status}
 							onValueChange={(value) => handleSelectChange('status', value)}>
-							<SelectTrigger>
+							<SelectTrigger className="w-full">
 								<SelectValue placeholder="Select status" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="w-full">
 								<SelectItem value="saved">Saved</SelectItem>
 								<SelectItem value="applied">Applied</SelectItem>
 								<SelectItem value="interviewing">Interviewing</SelectItem>
@@ -271,10 +256,10 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 						<Select
 							value={formData.job_type}
 							onValueChange={(value) => handleSelectChange('job_type', value)}>
-							<SelectTrigger>
+							<SelectTrigger className="w-full">
 								<SelectValue placeholder="Select type" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="w-full">
 								<SelectItem value="full-time">Full-time</SelectItem>
 								<SelectItem value="part-time">Part-time</SelectItem>
 								<SelectItem value="contract">Contract</SelectItem>
@@ -289,10 +274,10 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 						<Select
 							value={formData.work_mode}
 							onValueChange={(value) => handleSelectChange('work_mode', value)}>
-							<SelectTrigger>
+							<SelectTrigger className="w-full">
 								<SelectValue placeholder="Select mode" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="w-full">
 								<SelectItem value="remote">Remote</SelectItem>
 								<SelectItem value="hybrid">Hybrid</SelectItem>
 								<SelectItem value="onsite">Onsite</SelectItem>
@@ -362,18 +347,6 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="company_url">Company Website</Label>
-					<Input
-						id="company_url"
-						name="company_url"
-						type="url"
-						placeholder="https://company.com"
-						value={formData.company_url}
-						onChange={handleChange}
-					/>
-				</div>
-
-				<div className="space-y-2">
 					<Label htmlFor="linkedin_url">LinkedIn URL</Label>
 					<Input
 						id="linkedin_url"
@@ -381,18 +354,6 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 						type="url"
 						placeholder="https://linkedin.com/jobs/123"
 						value={formData.linkedin_url}
-						onChange={handleChange}
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label htmlFor="application_link">Application Link</Label>
-					<Input
-						id="application_link"
-						name="application_link"
-						type="url"
-						placeholder="https://apply.company.com/job123"
-						value={formData.application_link}
 						onChange={handleChange}
 					/>
 				</div>
@@ -407,17 +368,6 @@ export function JobEditForm({ job, onSuccess }: JobEditFormProps) {
 						onChange={handleChange}
 						rows={3}
 						className="resize-none"
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label htmlFor="skills">Skills (comma-separated)</Label>
-					<Input
-						id="skills"
-						name="skills"
-						placeholder="React, Node.js, TypeScript"
-						value={formData.skills}
-						onChange={handleChange}
 					/>
 				</div>
 
