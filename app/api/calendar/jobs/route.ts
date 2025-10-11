@@ -10,14 +10,13 @@ export async function GET(req: NextRequest) {
 	try {
 		await connectDB();
 
-		const user = await authenticateToken(req);
-		if (!user) {
-			return ApiSerializer.error('Unauthorized', 401);
-		}
+		const { error: authError, user } = await authenticateToken(req);
+		if (authError) return authError;
 
 		// Fetch all jobs that have either a deadline or applied_date
 		const jobs = await Job.find({
 			deletedAt: null,
+			user_id: user?.id,
 			$or: [
 				{ deadline: { $exists: true, $ne: null } },
 				{ applied_date: { $exists: true, $ne: null } }

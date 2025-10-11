@@ -111,15 +111,15 @@ export default function Home() {
 					<div className="flex justify-between items-center">
 						<div className="flex items-center space-x-2">
 							<div className="relative">
-								<Briefcase className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-								<Sparkles className="h-4 w-4 text-blue-500 absolute -top-1 -right-1" />
+								<Briefcase className="h-7 w-7 sm:h-8 sm:w-8 text-blue-600 dark:text-blue-400" />
+								<Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 absolute -top-1 -right-1" />
 							</div>
-							<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600">
+							<span className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600">
 								JobTrackr
 							</span>
 						</div>
-						<nav className="flex gap-3">
-							<Button asChild variant="ghost" size="sm">
+						<nav className="flex gap-2 sm:gap-3">
+							<Button asChild variant="ghost" size="sm" className="hidden sm:flex">
 								<Link href="/login" className="flex items-center gap-2">
 									<LogIn className="h-4 w-4" />
 									Login
@@ -130,8 +130,8 @@ export default function Home() {
 								size="sm"
 								className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
 								<Link href="/signup" className="flex items-center gap-2">
-									<UserPlus className="h-4 w-4" />
-									Get Started
+									<UserPlus className="h-4 w-4 sm:flex hidden" />
+									<span className="text-sm sm:text-base">Get Started</span>
 								</Link>
 							</Button>
 						</nav>

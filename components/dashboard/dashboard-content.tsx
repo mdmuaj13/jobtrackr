@@ -196,17 +196,17 @@ export function DashboardContent() {
 				</Card>
 			</div>
 
-			{/* Recent Not Applied Jobs Table */}
-			<div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
-				<div className="lg:col-span-2">
+			{/* Recent Not Applied Jobs Table and Chart */}
+			<div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+				<div className="lg:col-span-2 order-2 lg:order-1">
 					<Card className="border-t-2 border-t-[hsl(var(--chart-3))]">
 						<CardHeader className="bg-gradient-to-r from-[hsl(var(--chart-3))]/5 to-transparent">
-							<CardTitle className="flex items-center gap-2">
+							<CardTitle className="flex items-center gap-2 text-base sm:text-lg">
 								<span className="h-5 w-1 bg-[hsl(var(--chart-3))] rounded-full"></span>
 								Recent Jobs Not Applied
 							</CardTitle>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
 							{recentJobs.length === 0 ? (
 								<p className="text-sm text-muted-foreground text-center py-8">
 									No saved jobs found. Start adding jobs to track!
@@ -222,7 +222,7 @@ export function DashboardContent() {
 						</CardContent>
 					</Card>
 				</div>
-				<div className="lg:col-span-1">
+				<div className="lg:col-span-1 order-1 lg:order-2">
 					<JobStatsChart />
 				</div>
 			</div>
@@ -230,12 +230,12 @@ export function DashboardContent() {
 			{/* Rejected Jobs Table */}
 			<Card className="border-t-2 border-t-destructive">
 				<CardHeader className="bg-gradient-to-r from-destructive/5 to-transparent">
-					<CardTitle className="flex items-center gap-2">
+					<CardTitle className="flex items-center gap-2 text-base sm:text-lg">
 						<span className="h-5 w-1 bg-destructive rounded-full"></span>
 						Rejected Jobs
 					</CardTitle>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
 					{rejectedJobs.length === 0 ? (
 						<p className="text-sm text-muted-foreground text-center py-8">
 							No rejected jobs found.

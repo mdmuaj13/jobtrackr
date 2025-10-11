@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Calendar, dateFnsLocalizer, Event } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCalendarJobs, CalendarJob } from '@/hooks/calendar';
 
 const locales = {
 	'en-US': enUS,
@@ -20,48 +21,18 @@ const localizer = dateFnsLocalizer({
 	locales,
 });
 
-interface Job {
-	_id: string;
-	title: string;
-	company_name: string;
-	status: string;
-	deadline?: string;
-	applied_date?: string;
-	location?: string;
-	job_type?: string;
-	work_mode?: string;
-}
-
 interface CalendarEvent extends Event {
-	job: Job;
+	job: CalendarJob;
 	eventType: 'deadline' | 'applied';
 }
 
 export function CalendarView() {
-	const [jobs, setJobs] = useState<Job[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	useEffect(() => {
-		const fetchJobs = async () => {
-			try {
-				const response = await fetch('/api/calendar/jobs');
-				if (!response.ok) throw new Error('Failed to fetch');
-				const result = await response.json();
-				setJobs(result.data || []);
-			} catch (err) {
-				console.error('Error fetching calendar jobs:', err);
-				setError(true);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		fetchJobs();
-	}, []);
+	const { data: jobs, isLoading, error } = useCalendarJobs();
 
 	const events: CalendarEvent[] = useMemo(() => {
 		const eventList: CalendarEvent[] = [];
+
+		if (!jobs) return eventList;
 
 		jobs.forEach((job) => {
 			// Add deadline event

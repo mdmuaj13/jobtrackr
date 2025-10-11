@@ -10,10 +10,8 @@ export async function GET(req: NextRequest) {
 	try {
 		await connectDB();
 
-		const user = await authenticateToken(req);
-		if (!user) {
-			return ApiSerializer.error('Unauthorized', 401);
-		}
+		const { error: authError, user } = await authenticateToken(req);
+		if (authError) return authError;
 
 		// Calculate date 30 days ago
 		const thirtyDaysAgo = new Date();
@@ -22,6 +20,7 @@ export async function GET(req: NextRequest) {
 		// Count total jobs applied in last 30 days
 		const jobsApplied = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			status: { $in: ['applied', 'interviewing', 'offered', 'accepted'] },
 			createdAt: { $gte: thirtyDaysAgo }
 		});
@@ -29,6 +28,7 @@ export async function GET(req: NextRequest) {
 		// Count jobs listed in last 30 days (all non-deleted jobs)
 		const jobsListed = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			createdAt: { $gte: thirtyDaysAgo }
 		});
 
@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
 		const now = new Date();
 		const deadlineEndedNotApplied = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			status: 'saved',
 			deadline: { $lt: now },
 			createdAt: { $gte: thirtyDaysAgo }

@@ -10,10 +10,8 @@ export async function GET(req: NextRequest) {
 	try {
 		await connectDB();
 
-		const user = await authenticateToken(req);
-		if (!user) {
-			return ApiSerializer.error('Unauthorized', 401);
-		}
+		const { error: authError, user } = await authenticateToken(req);
+		if (authError) return authError;
 
 		const now = new Date();
 		const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -26,30 +24,35 @@ export async function GET(req: NextRequest) {
 		// Count jobs applied
 		const appliedCount = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			status: { $in: ['applied', 'interviewing', 'offered', 'accepted'] }
 		});
 
 		// Count jobs not yet applied
 		const notAppliedCount = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			status: 'saved'
 		});
 
 		// Count jobs with deadline today
 		const deadlineTodayCount = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			deadline: { $gte: todayStart, $lt: todayEnd }
 		});
 
 		// Count jobs with deadline this week
 		const deadlineWeekCount = await Job.countDocuments({
 			deletedAt: null,
+			user_id: user?.id,
 			deadline: { $gte: todayStart, $lt: weekEnd }
 		});
 
 		// Get last 5 jobs not applied (saved status)
 		const recentNotAppliedJobs = await Job.find({
 			deletedAt: null,
+			user_id: user?.id,
 			status: 'saved'
 		})
 			.sort({ createdAt: -1 })
@@ -59,6 +62,7 @@ export async function GET(req: NextRequest) {
 		// Get rejected jobs
 		const rejectedJobs = await Job.find({
 			deletedAt: null,
+			user_id: user?.id,
 			status: 'rejected'
 		})
 			.sort({ updatedAt: -1 })

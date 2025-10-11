@@ -4,10 +4,17 @@ import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import { authenticateToken } from '@/lib/auth';
 import { createJobSchema } from '@/lib/validations/job';
-import { logActivity, getActivityDetailsForStatus } from '@/lib/helpers/activity-logger';
+import {
+	logActivity,
+	getActivityDetailsForStatus,
+} from '@/lib/helpers/activity-logger';
 
 export async function GET(request: NextRequest) {
 	try {
+		const { error: authError, user } = await authenticateToken(request);
+		console.log(authError);
+		if (authError) return authError;
+
 		await connectDB();
 
 		const searchParams = request.nextUrl.searchParams;
@@ -20,7 +27,7 @@ export async function GET(request: NextRequest) {
 
 		const skip = (page - 1) * limit;
 
-		const query: Record<string, unknown> = { deletedAt: null };
+		const query: Record<string, unknown> = { deletedAt: null, user_id: user?.id };
 
 		if (search) {
 			query.$or = [
@@ -58,11 +65,7 @@ export async function GET(request: NextRequest) {
 			totalPages: Math.ceil(total / limit),
 		};
 
-		return ApiSerializer.success(
-			jobs,
-			'Jobs retrieved successfully',
-			meta
-		);
+		return ApiSerializer.success(jobs, 'Jobs retrieved successfully', meta);
 	} catch {
 		return ApiSerializer.error('Failed to retrieve jobs');
 	}
@@ -131,7 +134,10 @@ export async function POST(request: NextRequest) {
 		});
 
 		// Auto-log initial activity when job is created
-		const activityDetails = getActivityDetailsForStatus(undefined, status || 'saved');
+		const activityDetails = getActivityDetailsForStatus(
+			undefined,
+			status || 'saved'
+		);
 		await logActivity({
 			job_id: job._id,
 			user_id: user?.id,
