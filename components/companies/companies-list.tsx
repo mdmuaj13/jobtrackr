@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 import { SimpleTable } from '@/components/simple-table';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { Spinner } from '../ui/shadcn-io/spinner';
+import { Pagination } from '@/components/ui/pagination';
+import { EmptyData } from '../dashboard/empty-data';
 
 interface Company {
 	_id: string;
@@ -37,14 +39,16 @@ export function CompaniesList() {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [deletingCompany, setDeletingCompany] = useState<Company | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [page, setPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
 
 	const {
 		data: companiesData,
 		error,
 		mutate: mutateCompanies,
 	} = useCompanies({
-		page: 1,
-		limit: 10,
+		page,
+		limit: pageSize,
 	});
 
 	const companies = companiesData?.data || [];
@@ -210,16 +214,25 @@ export function CompaniesList() {
 							<Spinner variant="pinwheel" />
 						</div>
 					) : companies.length === 0 ? (
-						<div className="flex items-center justify-center py-8">
-							<p>No companies found</p>
-						</div>
+						<EmptyData title="No Company" description="Add company" />
 					) : (
-						<SimpleTable
-							data={companies}
-							columns={columns}
-							actions={actions}
-							showPagination={false}
-						/>
+						<>
+							<SimpleTable
+								data={companies}
+								columns={columns}
+								actions={actions}
+								showPagination={false}
+							/>
+							<Pagination
+								currentPage={page}
+								pageSize={pageSize}
+								totalItems={meta?.total || 0}
+								totalPages={meta?.totalPages || 1}
+								onPageChange={setPage}
+								onPageSizeChange={setPageSize}
+								itemName="companies"
+							/>
+						</>
 					)}
 				</CardContent>
 			</Card>

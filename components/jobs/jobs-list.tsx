@@ -14,6 +14,7 @@ import { SimpleTable } from '@/components/simple-table';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { Spinner } from '../ui/shadcn-io/spinner';
 import { Badge } from '@/components/ui/badge';
+import { Pagination } from '@/components/ui/pagination';
 
 interface Job {
 	_id: string;
@@ -61,14 +62,16 @@ export function JobsList() {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [deletingJob, setDeletingJob] = useState<Job | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [page, setPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
 
 	const {
 		data: jobsData,
 		error,
 		mutate: mutateJobs,
 	} = useJobs({
-		page: 1,
-		limit: 10,
+		page,
+		limit: pageSize,
 	});
 
 	const jobs = jobsData?.data || [];
@@ -305,12 +308,23 @@ export function JobsList() {
 							<p>No jobs found</p>
 						</div>
 					) : (
-						<SimpleTable
-							data={jobs}
-							columns={columns}
-							actions={actions}
-							showPagination={false}
-						/>
+						<>
+							<SimpleTable
+								data={jobs}
+								columns={columns}
+								actions={actions}
+								showPagination={false}
+							/>
+							<Pagination
+								currentPage={page}
+								pageSize={pageSize}
+								totalItems={meta?.total || 0}
+								totalPages={meta?.totalPages || 1}
+								onPageChange={setPage}
+								onPageSizeChange={setPageSize}
+								itemName="jobs"
+							/>
+						</>
 					)}
 				</CardContent>
 			</Card>

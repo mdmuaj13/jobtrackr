@@ -140,50 +140,107 @@ export default function Home() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="container mx-auto px-4 py-20 sm:py-28">
-				<div className="max-w-4xl mx-auto text-center space-y-8">
-					{/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-            <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-              AI-Powered Job Search Partner
-            </span>
-          </div> */}
+			<section className="container mx-auto px-4 py-20 sm:py-32 relative overflow-hidden">
+				{/* Colorful Gradient Background - Light Mode */}
+				<div
+					className="absolute inset-0 -top-40 left-0 right-0 h-[600px] -z-10 opacity-60 dark:hidden"
+					style={{
+						background: 'linear-gradient(282deg, #ffffff 11%, rgba(159, 252, 220, 0.72) 25%, rgba(64, 198, 255, 0.63) 34%, rgba(171, 182, 255, 0.85) 47%, rgba(226, 138, 255, 0.96) 59%, #ffffff 90%)',
+						filter: 'blur(80px)',
+					}}
+				></div>
+				{/* Colorful Gradient Background - Dark Mode */}
+				<div
+					className="absolute inset-0 -top-40 left-0 right-0 h-[600px] -z-10 opacity-30 hidden dark:block"
+					style={{
+						background: 'linear-gradient(282deg, #1a1a1a 11%, rgba(64, 198, 255, 0.3) 25%, rgba(100, 150, 255, 0.25) 34%, rgba(171, 182, 255, 0.35) 47%, rgba(226, 138, 255, 0.4) 59%, #1a1a1a 90%)',
+						filter: 'blur(80px)',
+					}}
+				></div>
 
-					<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
-						<span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200">
-							Manage Your Job Search
+				<div className="max-w-5xl mx-auto text-center space-y-10">
+					{/* Badge */}
+					<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
+						<Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+							AI-Powered Platform
 						</span>
-						<br />
-						<span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600">
-							Like a Pro
+					</div>
+
+					{/* Main Heading with Emoji */}
+					<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
+						<span className="block text-gray-900 dark:text-white">
+							Say 👋 Hello to
+						</span>
+						<span className="flex items-center justify-center gap-4 mt-2">
+							<Briefcase className="w-12 h-12 sm:w-16 sm:h-16 text-blue-600 dark:text-blue-400" />
+							<span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200">
+								JobTrackr
+							</span>
 						</span>
 					</h1>
 
-					<p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-						Your intelligent partner for tracking job applications, preparing
-						for interviews, and landing your dream job.
+					{/* Subtitle */}
+					<p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+						Track job applications with ease using our AI-powered platform.
 					</p>
 
-					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+					{/* CTA Buttons */}
+					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
 						<Button
 							asChild
 							size="lg"
-							className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-lg px-8 py-6">
+							className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 text-base sm:text-lg px-8 py-6 rounded-lg font-medium">
 							<Link href="/signup" className="flex items-center gap-2">
-								Start Tracking Jobs
+								Explore Features
 								<ArrowRight className="w-5 h-5" />
 							</Link>
 						</Button>
 						<Button
 							asChild
-							variant="outline"
+							variant="ghost"
 							size="lg"
-							className="text-lg px-8 py-6">
+							className="text-base sm:text-lg px-8 py-6 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
 							<Link href="/app/dashboard" className="flex items-center gap-2">
-								View Dashboard Demo
+								Play Video
 								<Sparkles className="w-5 h-5" />
 							</Link>
 						</Button>
+					</div>
+
+					{/* Trust Indicator */}
+					<p className="text-sm text-gray-500 dark:text-gray-500 pt-4">
+						Trusted by 2+ Job Seekers Worldwide 😑
+					</p>
+
+					{/* Animated Feature Icons */}
+					<div className="relative pt-12 pb-8">
+						<div className="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 overflow-x-auto no-scrollbar">
+							<div className="flex items-center gap-3 px-4 py-2 animate-float">
+								<Target className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+								<span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+									Tracking
+								</span>
+							</div>
+							<div className="flex items-center gap-3 px-4 py-2 animate-float-delayed">
+								<Brain className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+								<span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+									AI Insights
+								</span>
+							</div>
+							<div className="flex items-center gap-3 px-4 py-2 animate-float">
+								<BarChart3 className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+								<span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+									Analytics
+								</span>
+							</div>
+							<div className="flex items-center gap-3 px-4 py-2 animate-float-delayed">
+								<Calendar className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+								<span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+									Reminders
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>

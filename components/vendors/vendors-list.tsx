@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { SimpleTable } from '@/components/simple-table';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { Spinner } from '../ui/shadcn-io/spinner';
+import { Pagination } from '@/components/ui/pagination';
 
 interface Vendor {
 	_id: string;
@@ -34,14 +35,16 @@ export function VendorsList() {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [deletingVendor, setDeletingVendor] = useState<Vendor | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [page, setPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
 
 	const {
 		data: vendorsData,
 		error,
 		mutate: mutateVendors,
 	} = useVendors({
-		page: 1,
-		limit: 10,
+		page,
+		limit: pageSize,
 	});
 
 	const vendors = vendorsData?.data || [];
@@ -211,12 +214,23 @@ export function VendorsList() {
 							<p>No vendors found</p>
 						</div>
 					) : (
-						<SimpleTable
-							data={vendors}
-							columns={columns}
-							actions={actions}
-							showPagination={false}
-						/>
+						<>
+							<SimpleTable
+								data={vendors}
+								columns={columns}
+								actions={actions}
+								showPagination={false}
+							/>
+							<Pagination
+								currentPage={page}
+								pageSize={pageSize}
+								totalItems={meta?.total || 0}
+								totalPages={meta?.totalPages || 1}
+								onPageChange={setPage}
+								onPageSizeChange={setPageSize}
+								itemName="vendors"
+							/>
+						</>
 					)}
 				</CardContent>
 			</Card>
