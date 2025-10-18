@@ -62,7 +62,8 @@ const getStatusBadgeVariant = (status: Job['status']) => {
 	}
 };
 
-const formatStatus = (status: string) => {
+const formatStatus = (status?: string) => {
+	if (!status) return 'Unknown';
 	return status.charAt(0).toUpperCase() + status.slice(1);
 };
 
@@ -99,8 +100,8 @@ export function JobDetailsPageView({
 		setIsMarkingApplied(true);
 		try {
 			const submitData = { status: 'applied' as const };
-			const updatedJob = await updateJob(job._id, submitData);
-			setJob((prev) => ({ ...prev, ...updatedJob }));
+			const response = await updateJob(job._id, submitData);
+			setJob((prev) => ({ ...prev, ...response.data }));
 
 			toast.success('Job marked as applied');
 			onSuccess?.();
@@ -313,16 +314,16 @@ export function JobDetailsPageView({
 						</div>
 
 						{/* Activity Timeline Section */}
-						<div className="mt-6 pt-6 border-t">
+						{/* <div className="mt-6 pt-6 border-t">
 							<Timeline jobId={job._id} />
-						</div>
+						</div> */}
 
-						<Separator className="my-6" />
+						{/* <Separator className="my-6" /> */}
 
 						{/* Events & Deadlines Section */}
-						<div className="mt-6">
+						{/* <div className="mt-6">
 							<EventList jobId={job._id} />
-						</div>
+						</div> */}
 					</div>
 				</div>
 

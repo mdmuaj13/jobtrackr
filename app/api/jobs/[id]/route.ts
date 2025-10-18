@@ -12,10 +12,14 @@ export async function GET(
 ) {
 	try {
 		const { id } = await params;
+		const { user, error: authError } = await authenticateToken(request);
+		if (authError) return authError;
+
 		await connectDB();
 
 		const job = await Job.findOne({
 			_id: id,
+			user_id: user?._id,
 			deletedAt: null,
 		}).populate('company_id', 'name logo_url');
 

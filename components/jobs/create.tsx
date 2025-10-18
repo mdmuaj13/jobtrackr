@@ -83,6 +83,37 @@ export function JobForm({ onSuccess }: JobFormProps) {
 		}));
 	};
 
+	const handleApiCall = async () => {
+		setIsLoading(true);
+		try {
+			// TODO: Add your API call here
+			const response = await fetch('/api/your-endpoint', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					// Add your request data here
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error('API call failed');
+			}
+
+			const data = await response.json();
+			// TODO: Handle the response data
+			console.log('API Response:', data);
+			toast.success('Details fetched successfully');
+		} catch (error) {
+			toast.error(
+				error instanceof Error ? error.message : 'Failed to fetch details'
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
@@ -169,6 +200,29 @@ export function JobForm({ onSuccess }: JobFormProps) {
 			<form
 				onSubmit={handleSubmit}
 				className="flex-1 space-y-4 overflow-y-auto">
+				<div className="grid grid-cols-5 gap-4">
+					<div className="space-y-2 col-span-4">
+						<Label htmlFor="job_url">Job Posting URL</Label>
+						<Input
+							id="job_url"
+							name="job_url"
+							type="url"
+							placeholder="https://company.com/jobs/123"
+							value={formData.job_url}
+							onChange={handleChange}
+						/>
+					</div>
+					<div className="space-y-2 col-span-1 flex items-end">
+						<Button
+							type="button"
+							variant="outline"
+							className="w-full"
+							onClick={handleApiCall}
+							disabled={isLoading}>
+							Fetch Details
+						</Button>
+					</div>
+				</div>
 				<div className="space-y-2">
 					<Label htmlFor="title">Job Title *</Label>
 					<Input
@@ -180,7 +234,6 @@ export function JobForm({ onSuccess }: JobFormProps) {
 						required
 					/>
 				</div>
-
 				<div className="grid grid-cols-2 gap-4">
 					<div className="space-y-2 ">
 						<Label htmlFor="company_name">Company Name *</Label>

@@ -9,7 +9,7 @@ export default function JobDetailsPage() {
 	const params = useParams();
 	const jobId = params.id as string;
 
-	const { data: job, error, mutate } = useJob(jobId);
+	const { data: jobResponse, error, mutate } = useJob(jobId);
 
 	const handleSuccess = () => {
 		// Refresh the job data
@@ -26,7 +26,7 @@ export default function JobDetailsPage() {
 		);
 	}
 
-	if (!job) {
+	if (!jobResponse?.data) {
 		return (
 			<div className="flex-1 space-y-4 p-8 pt-6">
 				<div className="flex items-center justify-center h-[calc(100vh-200px)]">
@@ -38,7 +38,7 @@ export default function JobDetailsPage() {
 
 	return (
 		<div className="flex-1 space-y-4 p-8 pt-6 h-[calc(100vh-80px)]">
-			<JobDetailsPageView job={job} onSuccess={handleSuccess} />
+			<JobDetailsPageView job={jobResponse.data} onSuccess={handleSuccess} />
 		</div>
 	);
 }
