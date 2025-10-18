@@ -1,17 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { deleteJob } from '@/hooks/jobs';
 import { EntityView } from '@/components/ui/entity-view';
 import { ViewField, formatDate } from '@/components/ui/view-field';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Check } from 'lucide-react';
+import { Check, Maximize2, X } from 'lucide-react';
 import { updateJob } from '@/hooks/jobs';
 import { EventList } from '@/components/events/event-list';
 import { Timeline } from '@/components/activities/timeline';
 import { Separator } from '@/components/ui/separator';
+import { SheetClose, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 
 interface Job {
@@ -41,6 +43,7 @@ interface JobViewProps {
 	onEdit?: () => void;
 	onDelete?: () => void;
 	onSuccess?: () => void;
+	showFullscreenButton?: boolean;
 }
 
 const getStatusBadgeVariant = (status: Job['status']) => {
@@ -92,7 +95,9 @@ export function JobView({
 	onEdit,
 	onDelete,
 	onSuccess,
+	showFullscreenButton = true,
 }: JobViewProps) {
+	const router = useRouter();
 	const [job, setJob] = useState(initialJob);
 	const [isMarkingApplied, setIsMarkingApplied] = useState(false);
 
@@ -112,6 +117,10 @@ export function JobView({
 		}
 	};
 
+	const handleFullscreen = () => {
+		router.push(`/jobs/${job._id}`);
+	};
+
 	return (
 		<EntityView
 			title="Job Details"
@@ -122,6 +131,35 @@ export function JobView({
 			onDelete={onDelete}
 			onSuccess={onSuccess}
 			deleteFunction={deleteJob}
+			hideDefaultClose={true}
+			customHeader={
+				showFullscreenButton ? (
+					<SheetHeader className="px-0">
+						<div className="flex items-center justify-between">
+							<SheetTitle>Job Details</SheetTitle>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="ghost"
+									size="icon"
+									className="h-8 w-8"
+									onClick={handleFullscreen}
+								>
+									<Maximize2 className="h-4 w-4" />
+								</Button>
+								<SheetClose asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-8 w-8"
+									>
+										<X className="h-4 w-4" />
+									</Button>
+								</SheetClose>
+							</div>
+						</div>
+					</SheetHeader>
+				) : undefined
+			}
 			customActions={
 				job.status === 'saved' ? (
 					<Button

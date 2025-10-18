@@ -64,5 +64,12 @@ export const apiCall = async (url: string, options: RequestInit = {}) => {
 		throw new Error('Unauthorized');
 	}
 
-	return res.json();
+	const data = await res.json();
+
+	if (!res.ok) {
+		// Throw an error with the message from the API response
+		throw new Error(data.message || data.error || 'Request failed');
+	}
+
+	return data;
 };

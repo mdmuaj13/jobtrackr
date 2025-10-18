@@ -24,6 +24,8 @@ interface EntityViewProps<T> {
 	deleteFunction: (id: string) => Promise<void>;
 	children: ReactNode;
 	customActions?: ReactNode;
+	hideDefaultClose?: boolean;
+	customHeader?: ReactNode;
 }
 
 export function EntityView<T extends { _id: string }>({
@@ -37,6 +39,8 @@ export function EntityView<T extends { _id: string }>({
 	deleteFunction,
 	children,
 	customActions,
+	hideDefaultClose = false,
+	customHeader,
 }: EntityViewProps<T>) {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -64,20 +68,20 @@ export function EntityView<T extends { _id: string }>({
 	return (
 		<>
 			<div className="flex flex-col h-full space-y-6 px-4 pt-4 overflow-y-auto">
-				<SheetHeader className="px-0">
-					<SheetTitle>{title}</SheetTitle>
-				</SheetHeader>
+				{customHeader ? (
+					customHeader
+				) : (
+					<SheetHeader className="px-0">
+						<SheetTitle>{title}</SheetTitle>
+					</SheetHeader>
+				)}
 
 				<div className="flex-1 space-y-6 pb-2 overflow-y-auto">
 					<div className="grid grid-cols-1 gap-4">{children}</div>
 				</div>
 
 				<SheetFooter className="gap-2 px-0 mt-auto">
-					{customActions && (
-						<div className="w-full">
-							{customActions}
-						</div>
-					)}
+					{customActions && <div className="w-full">{customActions}</div>}
 					<div className="flex gap-2 w-full">
 						<Button
 							type="button"

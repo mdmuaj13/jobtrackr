@@ -287,7 +287,7 @@ export function JobsList() {
 								Add Job
 							</Button>
 						</SheetTrigger>
-						<SheetContent className="w-full sm:min-w-3xl">
+						<SheetContent className="w-full sm:min-w-5xl">
 							<div className="h-full">
 								<JobForm onSuccess={handleCreateSuccess} />
 							</div>
@@ -331,7 +331,7 @@ export function JobsList() {
 
 			{/* View Sheet */}
 			<Sheet open={viewSheetOpen} onOpenChange={setViewSheetOpen}>
-				<SheetContent className="w-full sm:min-w-3xl">
+				<SheetContent className="w-full sm:min-w-5xl" hideClose={true}>
 					<div className="h-full">
 						{viewingJob && (
 							<JobView
@@ -347,7 +347,7 @@ export function JobsList() {
 
 			{/* Edit Sheet */}
 			<Sheet open={editSheetOpen} onOpenChange={setEditSheetOpen}>
-				<SheetContent className="w-full sm:min-w-3xl">
+				<SheetContent className="w-full sm:min-w-5xl">
 					<div className="h-full">
 						{editingJob && (
 							<JobEditForm job={editingJob} onSuccess={handleEditSuccess} />
