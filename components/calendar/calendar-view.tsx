@@ -359,7 +359,7 @@ export function CalendarView() {
 
 			{/* Date Preview Panel */}
 			{isPanelOpen && (
-				<div className="h-[780px]">
+				<div className="h-[780px] animate-in fade-in slide-in-from-right-5 duration-300">
 					{renderDatePreviewPanel()}
 				</div>
 			)}
