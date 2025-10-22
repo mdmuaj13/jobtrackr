@@ -3,8 +3,15 @@ import User from '@/models/User';
 import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import { generateToken } from '@/lib/jwt';
+import { rateLimit, RateLimitPresets } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+	// Apply rate limiting
+	const rateLimitResult = rateLimit(request, RateLimitPresets.AUTH);
+	if (rateLimitResult.error) {
+		return rateLimitResult.error;
+	}
+
 	try {
 		await connectDB();
 

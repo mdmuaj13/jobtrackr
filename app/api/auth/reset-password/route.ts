@@ -3,8 +3,15 @@ import User from '@/models/User';
 import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import crypto from 'crypto';
+import { rateLimit, RateLimitPresets } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+	// Apply rate limiting for password reset
+	const rateLimitResult = rateLimit(request, RateLimitPresets.PASSWORD_RESET);
+	if (rateLimitResult.error) {
+		return rateLimitResult.error;
+	}
+
 	try {
 		await connectDB();
 

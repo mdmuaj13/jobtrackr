@@ -2,8 +2,15 @@ import connectDB from '@/lib/db';
 import User from '@/models/User';
 import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
+import { rateLimit, RateLimitPresets } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+	// Apply rate limiting (stricter for signup)
+	const rateLimitResult = rateLimit(request, RateLimitPresets.SIGNUP);
+	if (rateLimitResult.error) {
+		return rateLimitResult.error;
+	}
+
 	try {
 		await connectDB();
 

@@ -1,262 +1,349 @@
-# Productico Development Task Breakdown
+# JobTrackr
 
-## 🗄️ Database Schema & Models
+A modern, full-stack job application tracking system built with Next.js, React, TypeScript, and MongoDB. Track your job applications, interviews, deadlines, and career progress all in one place.
 
-### Core Models Design
-- [ ] User/Store model with business info
-- [ ] Category model (name, description, createdAt)
-- [ ] Product model with category reference
-- [ ] ProductVariant model (size, color, price, SKU)
-- [ ] Warehouse model (name, address, isActive)
-- [ ] Stock model (variant + warehouse + quantity)
-- [ ] Customer model (auto-generated from orders)
-- [ ] Vendor model (contact info + supplied products)
-- [ ] Order model with customer reference
-- [ ] OrderItem model (variant + quantity + price)
-- [ ] PurchaseOrder model with vendor reference
-- [ ] PurchaseOrderItem model
-- [ ] Settings model (business info, SEO, branding)
+## Features
 
-### Database Relationships
-- [ ] Define all foreign key relationships
-- [ ] Set up proper indexes for search/filter operations
-- [ ] Create data validation schemas
+### Core Functionality
+- **Job Management** - Track job applications through multiple stages (saved, applied, interviewing, offered, rejected, accepted, withdrawn)
+- **Activity Timeline** - Automatic activity logging with detailed history for each application
+- **Calendar Integration** - Schedule and manage interviews, assessments, follow-ups, and deadlines
+- **Company Management** - Maintain a database of companies with contact info, industry, and locations
+- **Vendor Management** - Track recruiting agencies and third-party vendors
+- **Dashboard Analytics** - Visualize your job search progress with charts and statistics
 
----
+### Technical Features
+- **Authentication** - Secure JWT-based authentication with bcrypt password hashing
+- **Responsive Design** - Mobile-friendly interface with collapsible sidebar navigation
+- **Real-time Validation** - Form validation with Zod schemas
+- **Image Uploads** - Cloudinary integration for company logos and profile images
+- **Soft Deletes** - Data recovery capability for all entities
+- **Advanced Search** - Full-text search across jobs with multiple filters
+- **Pagination** - Efficient data loading for large datasets
 
-## 🔧 API Development (Backend)
+## Tech Stack
 
-### Authentication & Security
-- [ ] JWT token generation and validation middleware
-- [ ] Password hashing with bcrypt
-- [ ] Login endpoint (`POST /api/auth/login`)
-- [ ] Token refresh mechanism
-- [ ] Logout endpoint
-- [ ] Password reset functionality (optional)
+### Frontend
+- **Framework**: Next.js 15.5.3 (App Router) + React 19.1.0
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4
+- **UI Components**: Radix UI, Tabler Icons, Lucide React
+- **State Management**: Zustand 5.0.8
+- **Forms**: React Hook Form 7.63.0 + Zod 4.1.11
+- **Data Fetching**: SWR 2.3.6
+- **Charts**: Recharts 3.2.1
+- **Calendar**: React Big Calendar 1.19.4
+- **Notifications**: Sonner 2.0.7
 
-### Product Management API
-- [ ] `GET /api/products` - List all products with pagination
-- [ ] `POST /api/products` - Create new product
-- [ ] `GET /api/products/:id` - Get single product with variants
-- [ ] `PUT /api/products/:id` - Update product
-- [ ] `DELETE /api/products/:id` - Delete product
-- [ ] `POST /api/products/:id/variants` - Add variant to product
-- [ ] `PUT /api/products/:id/variants/:variantId` - Update variant
-- [ ] `DELETE /api/products/:id/variants/:variantId` - Delete variant
-- [ ] `GET /api/categories` - List categories
-- [ ] `POST /api/categories` - Create category on-the-fly
+### Backend
+- **Runtime**: Node.js (Next.js API Routes)
+- **Database**: MongoDB 6.20.0 + Mongoose 8.18.2
+- **Authentication**: JWT (jsonwebtoken 9.0.2) + bcryptjs 3.0.2
+- **File Upload**: Cloudinary 2.7.0
+- **Validation**: Zod 4.1.11
 
-### Order Management API
-- [ ] `GET /api/orders` - List orders with filters (status, date, customer)
-- [ ] `POST /api/orders` - Create new order + auto-create customer
-- [ ] `GET /api/orders/:id` - Get order details with items
-- [ ] `PUT /api/orders/:id` - Update order
-- [ ] `PUT /api/orders/:id/status` - Update order status for fulfillment
-- [ ] `DELETE /api/orders/:id` - Cancel/delete order
-- [ ] `GET /api/orders/:id/invoice` - Generate invoice PDF
-- [ ] `GET /api/orders/:id/qr` - Generate QR tracking code
+### Development
+- **Package Manager**: Bun
+- **Linting**: ESLint 9
+- **Type Checking**: TypeScript
 
-### Customer Management API
-- [ ] `GET /api/customers` - List all auto-generated customers
-- [ ] `GET /api/customers/:id` - Get customer details + order history
-- [ ] Customer deduplication logic (optional enhancement)
+## Getting Started
 
-### Vendor Management API
-- [ ] `GET /api/vendors` - List all vendors
-- [ ] `POST /api/vendors` - Create vendor
-- [ ] `PUT /api/vendors/:id` - Update vendor
-- [ ] `DELETE /api/vendors/:id` - Delete vendor
-- [ ] `GET /api/vendors/:id/products` - Products supplied by vendor
+### Prerequisites
+- Node.js 18+ or Bun
+- MongoDB database (local or MongoDB Atlas)
+- Cloudinary account (for image uploads)
 
-### Purchase Order API
-- [ ] `GET /api/purchase-orders` - List POs with search/filter
-- [ ] `POST /api/purchase-orders` - Create new PO
-- [ ] `GET /api/purchase-orders/:id` - Get PO details
-- [ ] `PUT /api/purchase-orders/:id` - Update PO
-- [ ] `DELETE /api/purchase-orders/:id` - Delete PO
+### Installation
 
-### Stock & Warehouse API
-- [ ] `GET /api/warehouses` - List warehouses
-- [ ] `POST /api/warehouses` - Create warehouse
-- [ ] `PUT /api/warehouses/:id` - Update warehouse
-- [ ] `GET /api/stock` - Get stock levels across warehouses
-- [ ] `PUT /api/stock/:variantId/:warehouseId` - Update stock count
-- [ ] `GET /api/stock/low` - Get low stock alerts
-- [ ] Stock adjustment logging
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/jobtrackr.git
+cd jobtrackr
+```
 
-### Settings & Business API
-- [ ] `GET /api/settings` - Get business settings
-- [ ] `PUT /api/settings` - Update business info, SEO, branding
-- [ ] `POST /api/settings/upload` - Upload logo/banner to Cloudinary
-- [ ] `GET /api/storefront` - Public storefront data
+2. Install dependencies:
+```bash
+bun install
+# or
+npm install
+```
 
-### Dashboard Analytics API
-- [ ] `GET /api/analytics/dashboard` - Quick stats for charts
-- [ ] `GET /api/analytics/revenue` - Revenue over time
-- [ ] `GET /api/analytics/orders` - Order trends
-- [ ] `GET /api/analytics/customers` - Customer growth
-- [ ] `GET /api/analytics/top-products` - Best selling products
+3. Set up environment variables:
+```bash
+cp example.env .env.local
+```
 
----
+Edit `.env.local` with your configuration:
+```env
+MONGODB_URI=mongodb+srv://your-connection-string
+JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+NEXTAUTH_URL=http://localhost:3000
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-secret
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_PATH=jobtrackr
+CLOUDINARY_PUBLIC_URL=https://res.cloudinary.com/your-cloud-name/image/upload
+```
 
-## 🎨 Frontend Development (Next.js)
+4. Start the development server:
+```bash
+bun run dev
+# or
+npm run dev
+```
 
-### Authentication Pages
-- [ ] Login page (`/login`) - Email/password form
-- [ ] Redirect logic after successful login
-- [ ] Protected route middleware for dashboard
-- [ ] Error handling for invalid credentials
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Dashboard & Layout
-- [ ] Dashboard layout with sidebar navigation
-- [ ] Dashboard page (`/dashboard`) with Recharts integration
-- [ ] Revenue chart component
-- [ ] Orders overview chart
-- [ ] Customer growth chart
-- [ ] Quick stats cards (total orders, revenue, customers)
-- [ ] Responsive sidebar for mobile
+### Building for Production
 
-### Product Management Pages
-- [ ] Products list page (`/products`) with search/filter
-- [ ] Add product page (`/products/add`)
-- [ ] Edit product page (`/products/[id]/edit`)
-- [ ] Product variants management component
-- [ ] Category creation modal/dropdown
-- [ ] Product image upload integration
-- [ ] Bulk operations (optional)
+```bash
+bun run build
+bun run start
+```
 
-### Order Management Pages
-- [ ] Orders list page (`/orders`) with advanced filters
-- [ ] Create order page (`/orders/create`)
-- [ ] Order details page (`/orders/[id]`)
-- [ ] Customer auto-creation form component
-- [ ] Invoice generation/preview component
-- [ ] QR code display component
-- [ ] Print functionality for invoices
+## Project Structure
 
-### Fulfillment Pages
-- [ ] Fulfillment kanban page (`/fulfillment`)
-- [ ] Drag-and-drop order status updates
-- [ ] Order status update modal
-- [ ] Bulk status updates
-- [ ] Shipping label integration placeholder
-- [ ] Real-time updates (WebSocket or polling)
+```
+jobtrackr/
+├── app/                      # Next.js App Router
+│   ├── (auth)/              # Authentication routes (login, signup, etc.)
+│   ├── app/                 # Protected application routes
+│   │   ├── jobs/           # Job management pages
+│   │   ├── companies/      # Company management
+│   │   ├── vendors/        # Vendor management
+│   │   ├── calendar/       # Calendar view
+│   │   └── page.tsx        # Dashboard
+│   └── api/                 # API Routes
+│       ├── auth/           # Authentication endpoints
+│       ├── jobs/           # Job CRUD operations
+│       ├── activities/     # Activity tracking
+│       ├── events/         # Calendar events
+│       ├── companies/      # Company management
+│       ├── vendors/        # Vendor management
+│       ├── dashboard/      # Analytics & stats
+│       └── upload/         # File uploads
+│
+├── components/              # React components
+│   ├── ui/                 # Reusable UI components
+│   ├── jobs/               # Job-related components
+│   ├── activities/         # Activity timeline
+│   ├── events/             # Event management
+│   ├── companies/          # Company components
+│   ├── vendors/            # Vendor components
+│   ├── dashboard/          # Dashboard components
+│   ├── auth/               # Auth forms
+│   ├── auth-guard.tsx      # Protected route wrapper
+│   └── app-sidebar.tsx     # Navigation sidebar
+│
+├── models/                  # Mongoose schemas
+│   ├── User.ts             # User model
+│   ├── Job.ts              # Job application model
+│   ├── Activity.ts         # Activity log model
+│   ├── Event.ts            # Calendar event model
+│   ├── Company.ts          # Company model
+│   └── Vendor.ts           # Vendor model
+│
+├── lib/                     # Utilities and configurations
+│   ├── db.ts               # MongoDB connection
+│   ├── jwt.ts              # JWT utilities
+│   ├── auth.ts             # Auth middleware
+│   ├── api.ts              # API client
+│   ├── cloudinary.ts       # Cloudinary config
+│   ├── validations/        # Zod schemas
+│   └── helpers/            # Helper functions
+│
+├── hooks/                   # Custom React hooks
+│   ├── jobs.ts             # Job operations
+│   ├── companies.ts        # Company operations
+│   ├── vendors.ts          # Vendor operations
+│   ├── dashboard.ts        # Dashboard data
+│   └── calendar.ts         # Calendar data
+│
+├── store/                   # Zustand state management
+│   └── store.ts            # Auth store
+│
+└── types/                   # TypeScript types
+    └── payload.ts          # API response types
+```
 
-### Stock Management Pages
-- [ ] Stock overview page (`/stock`)
-- [ ] Warehouse management page (`/warehouses`)
-- [ ] Stock adjustment page
-- [ ] Low stock alerts component
-- [ ] Stock transfer between warehouses
-- [ ] Inventory reports
+## API Endpoints
 
-### Customer & Vendor Pages
-- [ ] Customers list page (`/customers`) - read-only
-- [ ] Customer details page with order history
-- [ ] Vendors list page (`/vendors`)
-- [ ] Add/edit vendor pages
-- [ ] Vendor-supplied products view
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/signup` - User registration
+- `POST /api/auth/forgot-password` - Request password reset
+- `POST /api/auth/reset-password` - Reset password with token
+- `GET /api/auth/whoami` - Get current user
 
-### Purchase Orders Pages
-- [ ] Purchase orders list (`/purchase-orders`)
-- [ ] Create PO page (`/purchase-orders/create`)
-- [ ] PO details page (`/purchase-orders/[id]`)
-- [ ] PO search and filtering
-- [ ] Vendor selection integration
+### Jobs
+- `GET /api/jobs` - List jobs (with pagination, search, filters)
+- `POST /api/jobs` - Create job
+- `GET /api/jobs/[id]` - Get job details
+- `PUT /api/jobs/[id]` - Update job
+- `DELETE /api/jobs/[id]` - Delete job
+- `POST /api/jobs/[id]/mark-applied` - Mark job as applied
 
-### Settings Pages
-- [ ] Business settings page (`/settings`)
-- [ ] Logo/banner upload component
-- [ ] SEO settings form
-- [ ] Store configuration
-- [ ] User profile/password change
+### Activities
+- `GET /api/activities` - List activities
+- `POST /api/activities` - Create activity
+- `GET /api/activities/[id]` - Get activity
+- `PUT /api/activities/[id]` - Update activity
+- `DELETE /api/activities/[id]` - Delete activity
 
-### Public Storefront
-- [ ] Public storefront page (`/store/[storeName]`)
-- [ ] Static product display
-- [ ] Business info and contact
-- [ ] SEO optimization
-- [ ] Mobile-responsive design
+### Events
+- `GET /api/events` - List events
+- `POST /api/events` - Create event
+- `GET /api/events/[id]` - Get event
+- `PUT /api/events/[id]` - Update event
+- `DELETE /api/events/[id]` - Delete event
 
----
+### Companies
+- `GET /api/companies` - List companies
+- `POST /api/companies` - Create company
+- `GET /api/companies/[id]` - Get company
+- `PUT /api/companies/[id]` - Update company
+- `DELETE /api/companies/[id]` - Delete company
 
-## 🔄 Integration & Advanced Features
+### Vendors
+- `GET /api/vendors` - List vendors
+- `POST /api/vendors` - Create vendor
+- `GET /api/vendors/[id]` - Get vendor
+- `PUT /api/vendors/[id]` - Update vendor
+- `DELETE /api/vendors/[id]` - Delete vendor
 
-### Third-party Integrations
-- [ ] Cloudinary setup for image uploads
-- [ ] QR code generation library integration
-- [ ] PDF generation for invoices
-- [ ] Email notifications (optional)
-- [ ] Shipping API integration placeholder
+### Dashboard
+- `GET /api/dashboard/stats` - General statistics
+- `GET /api/dashboard/job-stats` - Job-specific statistics
 
-### Performance & Optimization
-- [ ] Database query optimization
-- [ ] Image optimization for products
-- [ ] Caching strategy for frequently accessed data
-- [ ] Pagination for large datasets
-- [ ] Search optimization with indexing
+### Other
+- `POST /api/upload` - Upload image to Cloudinary
+- `GET /api/calendar/jobs` - Calendar view data
 
-### Testing & Quality
-- [ ] API endpoint testing
-- [ ] Frontend component testing
-- [ ] End-to-end workflow testing
-- [ ] Error boundary components
-- [ ] Loading states and skeleton screens
+## Database Models
 
-### Deployment & DevOps
-- [ ] Environment configuration
-- [ ] Database migration scripts
-- [ ] Production build optimization
-- [ ] Monitoring and logging setup
-- [ ] Backup strategies
+### User
+- Email/password authentication
+- Profile information
+- Password reset tokens
+- Soft delete support
 
----
+### Job
+- Job title, description, company
+- Location, job type, work mode
+- Salary range with currency
+- Application status tracking
+- Skills and requirements
+- Deadlines and dates
+- Notes and URLs
 
-## 📋 Priority Phases
+### Activity
+- 16 activity types (saved, applied, interview_scheduled, etc.)
+- Automatic logging on job creation/updates
+- Manual activity creation
+- Timeline view
 
-### Phase 1 (MVP - 4-6 weeks)
-1. Database setup + core models
-2. Authentication system
-3. Basic product management
-4. Simple order creation
-5. Dashboard with basic charts
+### Event
+- 6 event types (interview, submission, follow_up, assessment, offer_deadline, other)
+- Date, time, duration
+- Location and meeting links
+- Contact information
+- Reminder support
+- Status tracking
 
-### Phase 2 (Core Features - 3-4 weeks)
-1. Complete fulfillment workflow
-2. Stock management
-3. Customer/vendor management
-4. Purchase orders
+### Company
+- Company information
+- Industry and location
+- Contact details
+- Logo URL
 
-### Phase 3 (Polish & Advanced - 2-3 weeks)
-1. Advanced analytics
-2. Settings & branding
-3. Public storefront
-4. Performance optimization
+### Vendor
+- Vendor/recruiter information
+- Contact details
+- Notes
 
-### Phase 4 (Enhancements)
-1. Third-party integrations
-2. Mobile app considerations
-3. Advanced reporting
-4. Multi-user support (if needed)
+## Features in Detail
 
----
+### Job Tracking
+- Track applications through 7 stages
+- Filter by status, job type, work mode
+- Search by title, company, location, description
+- Set deadlines and application dates
+- Add salary expectations
+- Track skills and requirements
+- Add notes and links
 
-## 🚀 Development Tips
+### Activity Timeline
+- Automatically logs job creation
+- Automatically logs status changes
+- Manual activity creation
+- View complete history per job
+- 16 different activity types
 
-**API Development:**
-- Use MongoDB aggregation pipeline for complex queries
-- Implement proper error handling and validation
-- Set up API documentation (Swagger/OpenAPI)
-- Use middleware for common operations (auth, logging)
+### Calendar Management
+- Schedule interviews and assessments
+- Set follow-up reminders
+- Track offer deadlines
+- Link events to jobs
+- Add meeting links and locations
+- Contact person tracking
 
-**Frontend Development:**
-- Create reusable UI components early
-- Implement global state management for cart/user data
-- Use Next.js API routes for client-side data fetching
-- Optimize for mobile-first responsive design
+### Dashboard Analytics
+- Total jobs overview
+- Application status breakdown
+- Job statistics visualization
+- Recent jobs table
+- Interactive charts
 
-**Database Considerations:**
-- Design for eventual multi-tenant support
-- Implement soft deletes for important records
-- Create proper backup/restore procedures
-- Monitor query performance as data grows
+## Security Features
+
+- JWT-based authentication
+- Bcrypt password hashing (cost factor 12)
+- Protected API routes with middleware
+- Password reset with hashed tokens
+- File upload validation (type, size)
+- User enumeration prevention
+- Soft deletes for data recovery
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support, please open an issue in the GitHub repository.
+
+## Roadmap
+
+### Planned Features
+- [ ] Email notifications for deadlines and events
+- [ ] Export jobs to CSV/PDF
+- [ ] Integration with LinkedIn, Indeed
+- [ ] Resume matching with AI
+- [ ] Mobile application
+- [ ] Multi-user support with teams
+- [ ] Advanced analytics and insights
+- [ ] Document management
+- [ ] Interview preparation tools
+- [ ] Salary negotiation tracker
+
+### Known Issues
+- Email sending not yet implemented for password resets
+- No automated tests (coming soon)
+
+## Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- UI components from [Radix UI](https://www.radix-ui.com/)
+- Icons from [Tabler Icons](https://tabler-icons.io/) and [Lucide](https://lucide.dev/)
+- Charts powered by [Recharts](https://recharts.org/)
