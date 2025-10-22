@@ -5,12 +5,13 @@ import GuestGuard from '@/components/guest-guard';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ResetPasswordPage({
+export default async function ResetPasswordPage({
 	searchParams,
 }: {
-	searchParams: { token?: string };
+	searchParams: Promise<{ token?: string }>;
 }) {
-	const token = searchParams.token;
+	const params = await searchParams;
+	const token = params.token;
 
 	if (!token) {
 		return (
