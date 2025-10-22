@@ -4,6 +4,11 @@ import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import crypto from 'crypto';
 import { rateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { resend, DEFAULT_FROM_EMAIL } from '@/lib/resend';
+import {
+	getPasswordResetConfirmationEmailHtml,
+	getPasswordResetConfirmationEmailText,
+} from '@/lib/email-templates';
 
 export async function POST(request: NextRequest) {
 	// Apply rate limiting for password reset
@@ -48,9 +53,27 @@ export async function POST(request: NextRequest) {
 		user.resetPasswordExpires = null;
 		await user.save();
 
+		// Send confirmation email (don't fail the request if email fails)
+		try {
+			await resend.emails.send({
+				from: DEFAULT_FROM_EMAIL,
+				to: user.email,
+				subject: 'Password Reset Successful - JobTrackr',
+				html: getPasswordResetConfirmationEmailHtml(user.name),
+				text: getPasswordResetConfirmationEmailText(user.name),
+			});
+
+			if (process.env.NODE_ENV === 'development') {
+				console.log('✅ Password reset confirmation email sent successfully');
+			}
+		} catch (emailError) {
+			// Log error but don't fail the request since password was already reset
+			console.error('❌ Failed to send confirmation email:', emailError);
+		}
+
 		return ApiSerializer.success(null, 'Password has been reset successfully');
 	} catch (error) {
-		console.log(error);
+		console.error('❌ Password reset error:', error);
 		return ApiSerializer.error('Failed to reset password');
 	}
 }

@@ -4,6 +4,11 @@ import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import crypto from 'crypto';
 import { rateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { resend, DEFAULT_FROM_EMAIL, APP_BASE_URL } from '@/lib/resend';
+import {
+	getPasswordResetEmailHtml,
+	getPasswordResetEmailText,
+} from '@/lib/email-templates';
 
 export async function POST(request: NextRequest) {
 	// Apply rate limiting for password reset
@@ -42,26 +47,59 @@ export async function POST(request: NextRequest) {
 		user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
 
 		// Save the user with updated reset token
-		const savedUser = await user.save();
-		console.log('User saved with reset token:', {
-			email: savedUser.email,
-			hasResetToken: !!savedUser.resetPasswordToken,
-			expiresAt: savedUser.resetPasswordExpires,
-		});
+		await user.save();
 
-		// In production, send email with reset link
-		// For now, we'll return the token in development
-		const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+		// Generate reset URL
+		const resetUrl = `${APP_BASE_URL}/reset-password?token=${resetToken}`;
 
-		// TODO: Send email with resetUrl
-		console.log('Password reset URL:', resetUrl);
+		try {
+			// Send password reset email using Resend
+			await resend.emails.send({
+				from: DEFAULT_FROM_EMAIL,
+				to: user.email,
+				subject: 'Reset Your Password - JobTrackr',
+				html: getPasswordResetEmailHtml(resetUrl, user.name),
+				text: getPasswordResetEmailText(resetUrl, user.name),
+			});
+
+			// Log success in development
+			if (process.env.NODE_ENV === 'development') {
+				console.log('✅ Password reset email sent successfully');
+				console.log('Reset URL:', resetUrl);
+			}
+		} catch (emailError) {
+			// Log the email error but don't reveal it to the user for security
+			console.error('❌ Failed to send password reset email:', emailError);
+
+			// In development, still return the URL for testing
+			if (process.env.NODE_ENV === 'development') {
+				console.log('Reset URL (email failed):', resetUrl);
+				return ApiSerializer.success(
+					{ resetUrl, emailSent: false },
+					'Email sending failed, but here is the reset URL for development.'
+				);
+			}
+
+			// In production, reset the token since email failed
+			user.resetPasswordToken = null;
+			user.resetPasswordExpires = null;
+			await user.save();
+
+			return ApiSerializer.error(
+				'Failed to send password reset email. Please try again later.',
+				500
+			);
+		}
 
 		return ApiSerializer.success(
-			{ resetUrl: process.env.NODE_ENV === 'development' ? resetUrl : null },
+			{
+				resetUrl: process.env.NODE_ENV === 'development' ? resetUrl : null,
+				emailSent: true,
+			},
 			'If an account with that email exists, a password reset link has been sent.'
 		);
 	} catch (error) {
-		console.log(error);
+		console.error('❌ Password reset error:', error);
 		return ApiSerializer.error('Failed to process request');
 	}
 }

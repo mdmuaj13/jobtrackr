@@ -14,6 +14,8 @@ A modern, full-stack job application tracking system built with Next.js, React, 
 
 ### Technical Features
 - **Authentication** - Secure JWT-based authentication with bcrypt password hashing
+- **Email Integration** - Resend integration for password reset emails with professional templates
+- **Rate Limiting** - Built-in rate limiting on auth endpoints to prevent brute force attacks
 - **Responsive Design** - Mobile-friendly interface with collapsible sidebar navigation
 - **Real-time Validation** - Form validation with Zod schemas
 - **Image Uploads** - Cloudinary integration for company logos and profile images
@@ -39,6 +41,7 @@ A modern, full-stack job application tracking system built with Next.js, React, 
 - **Runtime**: Node.js (Next.js API Routes)
 - **Database**: MongoDB 6.20.0 + Mongoose 8.18.2
 - **Authentication**: JWT (jsonwebtoken 9.0.2) + bcryptjs 3.0.2
+- **Email Service**: Resend 6.2.2
 - **File Upload**: Cloudinary 2.7.0
 - **Validation**: Zod 4.1.11
 
@@ -53,6 +56,7 @@ A modern, full-stack job application tracking system built with Next.js, React, 
 - Node.js 18+ or Bun
 - MongoDB database (local or MongoDB Atlas)
 - Cloudinary account (for image uploads)
+- Resend account (for password reset emails) - [Sign up here](https://resend.com)
 
 ### Installation
 
@@ -78,13 +82,18 @@ Edit `.env.local` with your configuration:
 ```env
 MONGODB_URI=mongodb+srv://your-connection-string
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXTAUTH_URL=http://localhost:3000
 CLOUDINARY_API_KEY=your-cloudinary-api-key
 CLOUDINARY_API_SECRET=your-cloudinary-secret
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_PATH=jobtrackr
 CLOUDINARY_PUBLIC_URL=https://res.cloudinary.com/your-cloud-name/image/upload
+RESEND_API_KEY=re_your_resend_api_key_here
+RESEND_FROM_EMAIL=JobTrackr <noreply@yourdomain.com>
 ```
+
+See [EMAIL_INTEGRATION.md](./EMAIL_INTEGRATION.md) for detailed email setup instructions.
 
 4. Start the development server:
 ```bash
@@ -297,13 +306,17 @@ jobtrackr/
 
 ## Security Features
 
-- JWT-based authentication
+- JWT-based authentication with secure token generation
 - Bcrypt password hashing (cost factor 12)
-- Protected API routes with middleware
-- Password reset with hashed tokens
-- File upload validation (type, size)
-- User enumeration prevention
+- Protected API routes with authentication middleware
+- Rate limiting on authentication endpoints (prevents brute force attacks)
+- Password reset with SHA-256 hashed tokens (1-hour expiration)
+- Secure email delivery via Resend with professional templates
+- File upload validation (type, size restrictions)
+- User enumeration prevention on password reset
 - Soft deletes for data recovery
+
+See [RATE_LIMITING.md](./RATE_LIMITING.md) for rate limiting details.
 
 ## Contributing
 
@@ -326,7 +339,8 @@ For support, please open an issue in the GitHub repository.
 ## Roadmap
 
 ### Planned Features
-- [ ] Email notifications for deadlines and events
+- [ ] Email notifications for job deadlines and interview reminders
+- [ ] Welcome emails and email verification on signup
 - [ ] Export jobs to CSV/PDF
 - [ ] Integration with LinkedIn, Indeed
 - [ ] Resume matching with AI
@@ -338,8 +352,8 @@ For support, please open an issue in the GitHub repository.
 - [ ] Salary negotiation tracker
 
 ### Known Issues
-- Email sending not yet implemented for password resets
 - No automated tests (coming soon)
+- Email templates need testing across all email clients
 
 ## Acknowledgments
 
