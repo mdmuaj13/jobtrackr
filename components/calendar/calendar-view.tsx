@@ -1,13 +1,16 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event } from 'react-big-calendar';
-import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { format, parse, startOfWeek, getDay, isSameDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useCalendarJobs, CalendarJob } from '@/hooks/calendar';
+import { Calendar as CalendarIcon, MapPin, Briefcase, Clock, X } from 'lucide-react';
 
 const locales = {
 	'en-US': enUS,
@@ -28,6 +31,8 @@ interface CalendarEvent extends Event {
 
 export function CalendarView() {
 	const { data: jobs, isLoading, error } = useCalendarJobs();
+	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+	const [isPanelOpen, setIsPanelOpen] = useState(false);
 
 	const events: CalendarEvent[] = useMemo(() => {
 		const eventList: CalendarEvent[] = [];
@@ -60,6 +65,17 @@ export function CalendarView() {
 
 		return eventList;
 	}, [jobs]);
+
+	// Filter jobs for selected date
+	const selectedDateJobs = useMemo(() => {
+		if (!selectedDate || !jobs) return [];
+
+		return jobs.filter((job) => {
+			const hasDeadline = job.deadline && isSameDay(new Date(job.deadline), selectedDate);
+			const hasAppliedDate = job.applied_date && isSameDay(new Date(job.applied_date), selectedDate);
+			return hasDeadline || hasAppliedDate;
+		});
+	}, [selectedDate, jobs]);
 
 	const eventStyleGetter = (event: CalendarEvent) => {
 		const style: React.CSSProperties = {
@@ -97,11 +113,113 @@ export function CalendarView() {
 		);
 	};
 
+	// Handle date selection
+	const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
+		setSelectedDate(slotInfo.start);
+		setIsPanelOpen(true);
+	};
+
+	const handleSelectEvent = (event: CalendarEvent) => {
+		setSelectedDate(event.start as Date);
+		setIsPanelOpen(true);
+	};
+
+	// Handle panel close
+	const handleClosePanel = () => {
+		setIsPanelOpen(false);
+		setSelectedDate(null);
+	};
+
+	// Render date preview panel
+	const renderDatePreviewPanel = () => {
+		if (!selectedDate) return null;
+
+		return (
+			<Card className="h-full flex flex-col">
+				<CardHeader className="border-b">
+					<div className="flex items-center justify-between">
+						<CardTitle className="text-lg flex items-center gap-2">
+							<CalendarIcon className="h-5 w-5" />
+							{format(selectedDate, 'MMMM d, yyyy')}
+						</CardTitle>
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={handleClosePanel}
+							className="h-8 w-8"
+						>
+							<X className="h-4 w-4" />
+						</Button>
+					</div>
+				</CardHeader>
+				<CardContent className="p-0 flex-1 overflow-y-auto">
+					{selectedDateJobs.length === 0 ? (
+						<div className="p-6 text-center text-muted-foreground">
+							<p className="text-sm">No jobs scheduled for this date</p>
+						</div>
+					) : (
+						<div className="divide-y">
+							{selectedDateJobs.map((job) => {
+								const hasDeadline = job.deadline && isSameDay(new Date(job.deadline), selectedDate);
+								const hasAppliedDate = job.applied_date && isSameDay(new Date(job.applied_date), selectedDate);
+
+								return (
+									<div key={job._id} className="p-4 hover:bg-muted/50 transition-colors">
+										<div className="space-y-3">
+											<div>
+												<h3 className="font-semibold text-base mb-1">{job.title}</h3>
+												<p className="text-sm text-muted-foreground font-medium">{job.company_name}</p>
+											</div>
+
+											<div className="flex flex-wrap gap-2">
+												{hasDeadline && (
+													<Badge variant="destructive" className="text-xs">
+														<Clock className="h-3 w-3 mr-1" />
+														Deadline
+													</Badge>
+												)}
+												{hasAppliedDate && (
+													<Badge variant="default" className="text-xs bg-green-500 hover:bg-green-600">
+														<CalendarIcon className="h-3 w-3 mr-1" />
+														Applied
+													</Badge>
+												)}
+												<Badge variant="outline" className="text-xs">
+													{job.status}
+												</Badge>
+											</div>
+
+											<div className="space-y-1.5 text-sm text-muted-foreground">
+												{job.location && (
+													<div className="flex items-center gap-2">
+														<MapPin className="h-4 w-4" />
+														<span>{job.location}</span>
+													</div>
+												)}
+												{job.job_type && (
+													<div className="flex items-center gap-2">
+														<Briefcase className="h-4 w-4" />
+														<span>{job.job_type}</span>
+														{job.work_mode && <span>• {job.work_mode}</span>}
+													</div>
+												)}
+											</div>
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					)}
+				</CardContent>
+			</Card>
+		);
+	};
+
 	if (isLoading) {
 		return (
 			<Card>
 				<CardContent className="p-6">
-					<Skeleton className="h-[600px] w-full" />
+					<Skeleton className="h-[700px] w-full" />
 				</CardContent>
 			</Card>
 		);
@@ -118,31 +236,37 @@ export function CalendarView() {
 	}
 
 	return (
-		<Card>
-			<CardContent className="p-6">
-				<div className="mb-4 flex gap-4">
-					<div className="flex items-center gap-2">
-						<div className="w-4 h-4 bg-orange-500 rounded"></div>
-						<span className="text-sm">Deadline</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<div className="w-4 h-4 bg-green-500 rounded"></div>
-						<span className="text-sm">Applied</span>
-					</div>
-				</div>
-				<div className="h-[700px] calendar-container">
-					<Calendar
-						localizer={localizer}
-						events={events}
-						startAccessor="start"
-						endAccessor="end"
-						style={{ height: '100%' }}
-						eventPropGetter={eventStyleGetter}
-						components={{
-							event: CustomEvent,
-						}}
-					/>
-				</div>
+		<div className={`grid grid-cols-1 gap-4 ${isPanelOpen ? 'lg:grid-cols-3' : ''}`}>
+			{/* Calendar Section */}
+			<div className={isPanelOpen ? 'lg:col-span-2' : ''}>
+				<Card>
+					<CardContent className="p-6">
+						<div className="mb-4 flex gap-4">
+							<div className="flex items-center gap-2">
+								<div className="w-4 h-4 bg-orange-500 rounded"></div>
+								<span className="text-sm">Deadline</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<div className="w-4 h-4 bg-green-500 rounded"></div>
+								<span className="text-sm">Applied</span>
+							</div>
+						</div>
+						<div className="h-[700px] calendar-container">
+							<Calendar
+								localizer={localizer}
+								events={events}
+								startAccessor="start"
+								endAccessor="end"
+								style={{ height: '100%' }}
+								eventPropGetter={eventStyleGetter}
+								components={{
+									event: CustomEvent,
+								}}
+								onSelectSlot={handleSelectSlot}
+								onSelectEvent={handleSelectEvent}
+								selectable
+							/>
+						</div>
 				<style jsx global>{`
 					.calendar-container .rbc-calendar {
 						font-family: inherit;
@@ -229,7 +353,16 @@ export function CalendarView() {
 						@apply font-semibold text-lg;
 					}
 				`}</style>
-			</CardContent>
-		</Card>
+					</CardContent>
+				</Card>
+			</div>
+
+			{/* Date Preview Panel */}
+			{isPanelOpen && (
+				<div className="h-[780px] animate-in fade-in slide-in-from-right-5 duration-300">
+					{renderDatePreviewPanel()}
+				</div>
+			)}
+		</div>
 	);
 }
