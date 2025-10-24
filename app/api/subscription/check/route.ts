@@ -6,7 +6,7 @@
 import { NextRequest } from 'next/server';
 import { authenticateToken } from '@/lib/auth';
 import { SubscriptionService } from '@/lib/subscription-service';
-import { ApiSerializer } from '@/lib/api-serializer';
+import { ApiSerializer } from '@/types';
 
 /**
  * POST /api/subscription/check
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const authResult = await authenticateToken(request);
 
     if (!authResult.user) {
-      return ApiSerializer.error(authResult.error || 'Unauthorized', 401);
+      return authResult.error || ApiSerializer.error('Unauthorized', 401);
     }
 
     const userId = authResult.user.id;
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!result.allowed) {
-      return ApiSerializer.error(result.reason || 'Action not allowed', 403, result);
+      return ApiSerializer.error(result.reason || 'Action not allowed', 403);
     }
 
     return ApiSerializer.success(result, 'Action allowed');

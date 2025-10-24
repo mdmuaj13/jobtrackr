@@ -6,7 +6,7 @@
 import { NextRequest } from 'next/server';
 import { authenticateToken } from '@/lib/auth';
 import { SubscriptionService } from '@/lib/subscription-service';
-import { ApiSerializer } from '@/lib/api-serializer';
+import { ApiSerializer } from '@/types';
 import { PricingTier } from '@/types/subscription';
 
 /**
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const authResult = await authenticateToken(request);
 
     if (!authResult.user) {
-      return ApiSerializer.error(authResult.error || 'Unauthorized', 401);
+      return authResult.error || ApiSerializer.error('Unauthorized', 401);
     }
 
     const userId = authResult.user.id;

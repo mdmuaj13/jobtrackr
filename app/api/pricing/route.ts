@@ -4,7 +4,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { ApiSerializer } from '@/lib/api-serializer';
+import { ApiSerializer } from '@/types';
 import { getAllPricingTiers } from '@/lib/pricing-config';
 
 /**

@@ -85,12 +85,7 @@ export async function POST(request: NextRequest) {
 		if (!canCreate.allowed) {
 			return ApiSerializer.error(
 				canCreate.reason || 'Subscription limit reached',
-				403,
-				{
-					currentUsage: canCreate.currentUsage,
-					limit: canCreate.limit,
-					tier: canCreate.tier,
-				}
+				403
 			);
 		}
 
