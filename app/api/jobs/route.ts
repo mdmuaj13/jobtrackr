@@ -8,6 +8,7 @@ import {
 	logActivity,
 	getActivityDetailsForStatus,
 } from '@/lib/helpers/activity-logger';
+import { SubscriptionService } from '@/lib/subscription-service';
 
 export async function GET(request: NextRequest) {
 	try {
@@ -79,6 +80,15 @@ export async function POST(request: NextRequest) {
 
 		await connectDB();
 
+		// Check subscription limits before creating job
+		const canCreate = await SubscriptionService.canCreateJob(user!.id);
+		if (!canCreate.allowed) {
+			return ApiSerializer.error(
+				canCreate.reason || 'Subscription limit reached',
+				403
+			);
+		}
+
 		const body = await request.json();
 
 		const validation = createJobSchema.safeParse(body);
@@ -145,6 +155,9 @@ export async function POST(request: NextRequest) {
 			title: activityDetails.title,
 			description: activityDetails.description,
 		});
+
+		// Record job creation in usage stats
+		await SubscriptionService.recordJobCreation(user!.id);
 
 		return ApiSerializer.created(job, 'Job created successfully');
 	} catch {

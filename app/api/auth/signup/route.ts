@@ -3,6 +3,7 @@ import User from '@/models/User';
 import { ApiSerializer } from '@/types';
 import { NextRequest } from 'next/server';
 import { rateLimit, RateLimitPresets } from '@/lib/rate-limit';
+import { SubscriptionService } from '@/lib/subscription-service';
 
 export async function POST(request: NextRequest) {
 	// Apply rate limiting (stricter for signup)
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest) {
 			role: body.role,
 			image: body.image,
 		});
+
+		// Create free tier subscription for new user
+		await SubscriptionService.initializeFreeSubscription(user._id.toString());
 
 		const userResponse = {
 			id: user._id,
