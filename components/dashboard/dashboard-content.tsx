@@ -110,7 +110,7 @@ export function DashboardContent() {
 	if (error) {
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
-				<p className="text-red-500">Failed to load dashboard data</p>
+				<p className="text-destructive">Failed to load dashboard data</p>
 			</div>
 		);
 	}
@@ -123,15 +123,15 @@ export function DashboardContent() {
 		<div className="space-y-6">
 			{/* Stats Cards and Pie Chart Grid */}
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-				<Card className="border-l-4 border-l-green-500 bg-gradient-to-br from-green-500/5 to-transparent">
+				<Card className="border-l-4 border-l-[hsl(var(--chart-1))] bg-gradient-to-br from-[hsl(var(--chart-1))]/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">Applied Jobs</CardTitle>
-						<div className="rounded-full bg-green-500/20 p-2">
-							<IconChecks className="h-4 w-4 text-green-600" />
+						<div className="rounded-full bg-[hsl(var(--chart-1))]/20 p-2">
+							<IconChecks className="h-4 w-4 text-[hsl(var(--chart-1))]" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-green-600">
+						<div className="text-3xl font-bold text-[hsl(var(--chart-1))]">
 							{stats?.applied || 0}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
@@ -140,15 +140,15 @@ export function DashboardContent() {
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-500/5 to-transparent">
+				<Card className="border-l-4 border-l-[hsl(var(--chart-3))] bg-gradient-to-br from-[hsl(var(--chart-3))]/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">Yet to Apply</CardTitle>
-						<div className="rounded-full bg-blue-500/20 p-2">
-							<IconBriefcase className="h-4 w-4 text-blue-600" />
+						<div className="rounded-full bg-[hsl(var(--chart-3))]/20 p-2">
+							<IconBriefcase className="h-4 w-4 text-[hsl(var(--chart-3))]" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-blue-600">
+						<div className="text-3xl font-bold text-[hsl(var(--chart-3))]">
 							{stats?.notApplied || 0}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
@@ -157,17 +157,17 @@ export function DashboardContent() {
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-orange-500 bg-gradient-to-br from-orange-500/5 to-transparent">
+				<Card className="border-l-4 border-l-[hsl(var(--chart-4))] bg-gradient-to-br from-[hsl(var(--chart-4))]/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">
 							Deadline Today
 						</CardTitle>
-						<div className="rounded-full bg-orange-500/20 p-2">
-							<IconClock className="h-4 w-4 text-orange-600" />
+						<div className="rounded-full bg-[hsl(var(--chart-4))]/20 p-2">
+							<IconClock className="h-4 w-4 text-[hsl(var(--chart-4))]" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-orange-600">
+						<div className="text-3xl font-bold text-[hsl(var(--chart-4))]">
 							{stats?.deadlineToday || 0}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
@@ -176,17 +176,17 @@ export function DashboardContent() {
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-purple-500 bg-gradient-to-br from-purple-500/5 to-transparent">
+				<Card className="border-l-4 border-l-[hsl(var(--chart-5))] bg-gradient-to-br from-[hsl(var(--chart-5))]/5 to-transparent">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-sm font-medium">
 							Deadline This Week
 						</CardTitle>
-						<div className="rounded-full bg-purple-500/20 p-2">
-							<IconCalendar className="h-4 w-4 text-purple-600" />
+						<div className="rounded-full bg-[hsl(var(--chart-5))]/20 p-2">
+							<IconCalendar className="h-4 w-4 text-[hsl(var(--chart-5))]" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="text-3xl font-bold text-purple-600">
+						<div className="text-3xl font-bold text-[hsl(var(--chart-5))]">
 							{stats?.deadlineWeek || 0}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">

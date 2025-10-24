@@ -36,10 +36,10 @@ export function NavMain({
 		if (url === '/app/jobs' && pathname.startsWith('/app/jobs')) {
 			return true;
 		}
-		if (url === '/app/products' && pathname.startsWith('/app/products')) {
+		if (url === '/app/calendar' && pathname.startsWith('/app/calendar')) {
 			return true;
 		}
-		if (url === '/app/documents' && pathname.startsWith('/app/documents')) {
+		if (url === '/app/companies' && pathname.startsWith('/app/companies')) {
 			return true;
 		}
 

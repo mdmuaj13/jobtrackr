@@ -33,6 +33,7 @@ export function CalendarView() {
 	const { data: jobs, isLoading, error } = useCalendarJobs();
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
+	const [isClosing, setIsClosing] = useState(false);
 
 	const events: CalendarEvent[] = useMemo(() => {
 		const eventList: CalendarEvent[] = [];
@@ -126,8 +127,12 @@ export function CalendarView() {
 
 	// Handle panel close
 	const handleClosePanel = () => {
-		setIsPanelOpen(false);
-		setSelectedDate(null);
+		setIsClosing(true);
+		setTimeout(() => {
+			setIsPanelOpen(false);
+			setSelectedDate(null);
+			setIsClosing(false);
+		}, 300); // Match animation duration
 	};
 
 	// Render date preview panel
@@ -179,14 +184,14 @@ export function CalendarView() {
 													</Badge>
 												)}
 												{hasAppliedDate && (
-													<Badge variant="default" className="text-xs bg-green-500 hover:bg-green-600">
+													<Badge variant="default" className="text-xs bg-green-500 hover:bg-green-400">
 														<CalendarIcon className="h-3 w-3 mr-1" />
 														Applied
 													</Badge>
 												)}
-												<Badge variant="outline" className="text-xs">
-													{job.status}
-												</Badge>
+												{/* <Badge variant="outline" className="text-xs">
+													{job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+												</Badge> */}
 											</div>
 
 											<div className="space-y-1.5 text-sm text-muted-foreground">
@@ -229,7 +234,7 @@ export function CalendarView() {
 		return (
 			<Card>
 				<CardContent className="p-6">
-					<p className="text-center text-red-500">Failed to load calendar</p>
+					<p className="text-center text-destructive">Failed to load calendar</p>
 				</CardContent>
 			</Card>
 		);
@@ -243,11 +248,11 @@ export function CalendarView() {
 					<CardContent className="p-6">
 						<div className="mb-4 flex gap-4">
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-orange-500 rounded"></div>
+								<div className="w-4 h-4 bg-destructive rounded"></div>
 								<span className="text-sm">Deadline</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-green-500 rounded"></div>
+								<div className="w-4 h-4 bg-[hsl(var(--chart-1))] rounded"></div>
 								<span className="text-sm">Applied</span>
 							</div>
 						</div>
@@ -359,7 +364,11 @@ export function CalendarView() {
 
 			{/* Date Preview Panel */}
 			{isPanelOpen && (
-				<div className="h-[780px] animate-in fade-in slide-in-from-right-5 duration-300">
+				<div className={`h-[780px] transition-all duration-300 ${
+					isClosing
+						? 'animate-out fade-out slide-out-to-right-5'
+						: 'animate-in fade-in slide-in-from-right-5'
+				}`}>
 					{renderDatePreviewPanel()}
 				</div>
 			)}
