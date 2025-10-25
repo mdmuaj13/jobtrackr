@@ -13,6 +13,7 @@ import { Timeline } from '@/components/activities/timeline';
 import { Separator } from '@/components/ui/separator';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { Edit, Trash2 } from 'lucide-react';
+import { JobChatInterface } from './job-chat-interface';
 
 interface Job {
 	_id: string;
@@ -142,37 +143,45 @@ export function JobDetailsPageView({
 
 	return (
 		<>
-			<div className="flex flex-col h-full max-w-5xl mx-auto bg-background border rounded-lg shadow-lg">
-				{/* Custom Header */}
-				<div className="flex flex-col gap-1.5 p-4 border-b">
-					<div className="flex items-center justify-between">
-						<h2 className="font-semibold">Job Details</h2>
-						<div className="flex items-center gap-2">
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-8 w-8"
-								onClick={handleClose}
-								title="Minimize"
-							>
-								<Minimize2 className="h-4 w-4" />
-							</Button>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-8 w-8"
-								onClick={handleClose}
-								title="Close"
-							>
-								<X className="h-4 w-4" />
-							</Button>
-						</div>
-					</div>
+			{/* 5-Column Grid Layout */}
+			<div className="grid grid-cols-5 gap-6 h-full">
+				{/* Chat Interface - 3 columns */}
+				<div className="col-span-3 h-full">
+					<JobChatInterface jobId={job._id} jobTitle={job.title} />
 				</div>
 
-				{/* Content */}
-				<div className="flex-1 space-y-6 p-4 overflow-y-auto">
-					<div className="grid grid-cols-1 gap-4">
+				{/* Job Details - 2 columns */}
+				<div className="col-span-2 flex flex-col h-full bg-background border rounded-lg shadow-lg">
+					{/* Custom Header */}
+					<div className="flex flex-col gap-1.5 p-4 border-b">
+						<div className="flex items-center justify-between">
+							<h2 className="font-semibold">Job Details</h2>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="ghost"
+									size="icon"
+									className="h-8 w-8"
+									onClick={handleClose}
+									title="Minimize"
+								>
+									<Minimize2 className="h-4 w-4" />
+								</Button>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="h-8 w-8"
+									onClick={handleClose}
+									title="Close"
+								>
+									<X className="h-4 w-4" />
+								</Button>
+							</div>
+						</div>
+					</div>
+
+					{/* Content */}
+					<div className="flex-1 space-y-6 p-4 overflow-y-auto">
+						<div className="grid grid-cols-1 gap-4">
 						<ViewField
 							label="Job Title"
 							value={<p className="text-sm font-semibold">{job.title}</p>}
@@ -324,40 +333,41 @@ export function JobDetailsPageView({
 						{/* <div className="mt-6">
 							<EventList jobId={job._id} />
 						</div> */}
+						</div>
 					</div>
-				</div>
 
-				{/* Footer */}
-				<div className="mt-auto flex flex-col gap-2 p-4 border-t">
-					{job.status === 'saved' && (
-						<div className="w-full">
+					{/* Footer */}
+					<div className="mt-auto flex flex-col gap-2 p-4 border-t">
+						{job.status === 'saved' && (
+							<div className="w-full">
+								<Button
+									onClick={handleMarkAsApplied}
+									disabled={isMarkingApplied}
+									className="w-full"
+								>
+									<Check className="h-4 w-4 mr-2" />
+									{isMarkingApplied ? 'Marking...' : 'Mark as Applied'}
+								</Button>
+							</div>
+						)}
+						<div className="flex gap-2 w-full">
 							<Button
-								onClick={handleMarkAsApplied}
-								disabled={isMarkingApplied}
-								className="w-full"
-							>
-								<Check className="h-4 w-4 mr-2" />
-								{isMarkingApplied ? 'Marking...' : 'Mark as Applied'}
+								type="button"
+								variant="outline"
+								onClick={handleEdit}
+								className="flex-1 items-center gap-2">
+								<Edit className="h-4 w-4" />
+								Edit
+							</Button>
+							<Button
+								type="button"
+								variant="destructive"
+								onClick={handleDeleteClick}
+								className="flex-1 items-center gap-2">
+								<Trash2 className="h-4 w-4" />
+								Delete
 							</Button>
 						</div>
-					)}
-					<div className="flex gap-2 w-full">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={handleEdit}
-							className="flex-1 items-center gap-2">
-							<Edit className="h-4 w-4" />
-							Edit
-						</Button>
-						<Button
-							type="button"
-							variant="destructive"
-							onClick={handleDeleteClick}
-							className="flex-1 items-center gap-2">
-							<Trash2 className="h-4 w-4" />
-							Delete
-						</Button>
 					</div>
 				</div>
 			</div>
