@@ -7,6 +7,7 @@ import {
 	IconBuildingCastle,
 	IconSettings,
 	IconBuilding,
+	IconMessageCircle,
 } from '@tabler/icons-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -44,6 +45,11 @@ const data = {
 			title: 'Companies',
 			url: '/app/companies',
 			icon: IconBuilding,
+		},
+		{
+			title: 'Chat',
+			url: '/app/chat',
+			icon: IconMessageCircle,
 		},
 	],
 	navClouds: [],
