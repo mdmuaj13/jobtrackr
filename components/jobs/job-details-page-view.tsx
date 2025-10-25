@@ -96,6 +96,7 @@ export function JobDetailsPageView({
 	const [isMarkingApplied, setIsMarkingApplied] = useState(false);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(true);
 
 	const handleMarkAsApplied = async () => {
 		setIsMarkingApplied(true);
@@ -146,12 +147,12 @@ export function JobDetailsPageView({
 			{/* 5-Column Grid Layout */}
 			<div className="grid grid-cols-5 gap-6 h-full">
 				{/* Chat Interface - 3 columns */}
-				<div className="col-span-3 h-full">
+				<div className="col-span-3 max-h-screen">
 					<JobChatInterface jobId={job._id} jobTitle={job.title} />
 				</div>
 
 				{/* Job Details - 2 columns */}
-				<div className="col-span-2 flex flex-col h-full bg-background border rounded-lg shadow-lg">
+				<div className="col-span-2 flex flex-col h-full max-h-screen overflow-hidden bg-background border rounded-lg shadow-lg">
 					{/* Custom Header */}
 					<div className="flex flex-col gap-1.5 p-4 border-b">
 						<div className="flex items-center justify-between">

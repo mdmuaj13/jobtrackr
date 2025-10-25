@@ -107,7 +107,7 @@ export default function Home() {
 		<div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
 			{/* Header */}
 			<header className="w-full border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50">
-				<div className="container mx-auto px-4 py-4">
+				<div className="max-w-6xl mx-auto py-4">
 					<div className="flex justify-between items-center">
 						<div className="flex items-center space-x-2">
 							<div className="relative">
@@ -140,7 +140,7 @@ export default function Home() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="container mx-auto px-4 py-16 sm:py-24 relative overflow-hidden">
+			<section className="px-4 py-16 sm:py-24 relative overflow-hidden">
 				{/* Animated Background Elements */}
 				<div className="absolute inset-0 -top-40 left-0 right-0 h-[600px] -z-10 opacity-50 dark:opacity-30">
 					<div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -303,7 +303,7 @@ export default function Home() {
 			</section>
 
 			{/* Features Section */}
-			<section className="container mx-auto px-4 py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+			<section className="px-4 py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
 				<div className="max-w-6xl mx-auto">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
@@ -324,7 +324,7 @@ export default function Home() {
 			</section>
 
 			{/* Benefits Section */}
-			<section className="container mx-auto px-4 py-20">
+			<section className="px-4 py-20">
 				<div className="max-w-6xl mx-auto">
 					<div className="grid md:grid-cols-2 gap-12 items-center">
 						<div className="space-y-6">
@@ -410,7 +410,7 @@ export default function Home() {
 			</section>
 
 			{/* CTA Section */}
-			<section className="container mx-auto px-4 py-20">
+			<section className="px-4 py-20">
 				<div className="max-w-4xl mx-auto">
 					<div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 p-12 text-center">
 						<div className="relative z-10 space-y-6">
@@ -447,7 +447,7 @@ export default function Home() {
 
 			{/* Footer */}
 			<footer className="border-t border-gray-200 dark:border-gray-700 py-8">
-				<div className="container mx-auto px-4">
+				<div className="max-w-6xl mx-auto ">
 					<div className="flex flex-col sm:flex-row justify-between items-center gap-4">
 						<div className="flex items-center space-x-2">
 							<Briefcase className="h-6 w-6 text-blue-600 dark:text-blue-400" />
