@@ -59,13 +59,14 @@ export async function GET(req: NextRequest) {
 			.limit(5)
 			.lean();
 
-		// Get rejected jobs
-		const rejectedJobs = await Job.find({
+		// Get interviewing jobs
+		const interviewingJobs = await Job.find({
 			deletedAt: null,
 			user_id: user?.id,
-			status: 'rejected'
+			status: 'interviewing'
 		})
 			.sort({ updatedAt: -1 })
+			.limit(5)
 			.lean();
 
 		return ApiSerializer.success({
@@ -76,7 +77,7 @@ export async function GET(req: NextRequest) {
 				deadlineWeek: deadlineWeekCount
 			},
 			recentNotAppliedJobs,
-			rejectedJobs
+			interviewingJobs
 		});
 	} catch (error) {
 		console.error('Dashboard stats error:', error);

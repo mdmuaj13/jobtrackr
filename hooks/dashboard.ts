@@ -20,7 +20,7 @@ interface RecentJob {
 interface DashboardData {
 	stats: DashboardStats;
 	recentNotAppliedJobs: RecentJob[];
-	rejectedJobs: RecentJob[];
+	interviewingJobs: RecentJob[];
 }
 
 export function useDashboardStats() {

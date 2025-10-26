@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Plus } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useJobs, deleteJob } from '@/hooks/jobs';
 import { JobForm } from './create';
 import { JobEditForm } from './edit-form';
@@ -13,8 +14,15 @@ import { toast } from 'sonner';
 import { SimpleTable } from '@/components/simple-table';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { Spinner } from '../ui/shadcn-io/spinner';
-import { Badge } from '@/components/ui/badge';
 import { Pagination } from '@/components/ui/pagination';
+import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 
 interface Job {
 	_id: string;
@@ -54,6 +62,7 @@ interface Job {
 }
 
 export function JobsList() {
+	const searchParams = useSearchParams();
 	const [createSheetOpen, setCreateSheetOpen] = useState(false);
 	const [editSheetOpen, setEditSheetOpen] = useState(false);
 	const [viewSheetOpen, setViewSheetOpen] = useState(false);
@@ -64,6 +73,16 @@ export function JobsList() {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
+	const [searchQuery, setSearchQuery] = useState('');
+	const [statusFilter, setStatusFilter] = useState<string>('');
+
+	// Set initial filter from URL parameters
+	useEffect(() => {
+		const statusParam = searchParams.get('status');
+		if (statusParam) {
+			setStatusFilter(statusParam);
+		}
+	}, [searchParams]);
 
 	const {
 		data: jobsData,
@@ -72,6 +91,8 @@ export function JobsList() {
 	} = useJobs({
 		page,
 		limit: pageSize,
+		search: searchQuery || undefined,
+		status: statusFilter || undefined,
 	});
 
 	const jobs = jobsData?.data || [];
@@ -139,24 +160,24 @@ export function JobsList() {
 		mutateJobs();
 	};
 
-	const getStatusVariant = (status: string) => {
+	const getStatusColor = (status: string) => {
 		switch (status) {
 			case 'saved':
-				return 'secondary';
+				return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
 			case 'applied':
-				return 'default';
+				return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
 			case 'interviewing':
-				return 'default';
+				return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
 			case 'offered':
-				return 'default';
+				return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
 			case 'rejected':
-				return 'destructive';
+				return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
 			case 'accepted':
-				return 'default';
+				return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
 			case 'withdrawn':
-				return 'outline';
+				return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
 			default:
-				return 'secondary';
+				return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
 		}
 	};
 
@@ -164,9 +185,13 @@ export function JobsList() {
 		{
 			key: 'title',
 			header: 'Job Title',
-			render: (value: unknown, row: Job) => (
+			render: (value: string, row: Job) => (
 				<div>
-					<div className="font-medium">{String(value)}</div>
+					<div className="font-medium">
+						{String(value).length > 50
+							? String(value).slice(0, 50) + '...'
+							: value}
+					</div>
 					<div className="text-xs text-muted-foreground">
 						{row.company_name}
 					</div>
@@ -177,20 +202,14 @@ export function JobsList() {
 			key: 'status',
 			header: 'Status',
 			render: (value: unknown) => (
-				<Badge variant={getStatusVariant(String(value)) as 'default' | 'secondary' | 'destructive' | 'outline'}>
-					{String(value).charAt(0).toUpperCase() + String(value).slice(1)}
-				</Badge>
+				<span
+					className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(
+						String(value)
+					)}`}>
+					{String(value)}
+				</span>
 			),
 		},
-		// {
-		// 	key: 'location',
-		// 	header: 'Location',
-		// 	render: (value: unknown) => (
-		// 		<span className="max-w-xs truncate block">
-		// 			{value ? String(value) : '-'}
-		// 		</span>
-		// 	),
-		// },
 		{
 			key: 'salary_min',
 			header: 'Salary Range',
@@ -225,10 +244,19 @@ export function JobsList() {
 		{
 			key: 'work_mode',
 			header: 'Mode',
-			render: (value: unknown) => (
-				<span className="max-w-xs truncate block capitalize">
-					{value ? String(value) : '-'}
-				</span>
+			render: (value: unknown, row: Job) => (
+				<div>
+					<div className="font-medium capitalize">
+						{value ? String(value) : '-'}
+					</div>
+					<div className="text-xs text-muted-foreground capitalize">
+						{row.location
+							? row.location.length > 15
+								? row.location.slice(0, 15) + '...'
+								: row.location
+							: ''}
+					</div>
+				</div>
 			),
 		},
 		{
@@ -296,9 +324,80 @@ export function JobsList() {
 				</div>
 			</div>
 
+			{/* Search and Filter */}
+			<div className="flex items-center gap-4">
+				<div className="relative flex-1">
+					<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+					<Input
+						placeholder="Search by job title, company, or location..."
+						value={searchQuery}
+						onChange={(e) => {
+							setSearchQuery(e.target.value);
+							setPage(1); // Reset to first page on search
+						}}
+						className="pl-9"
+					/>
+				</div>
+				<Select
+					value={statusFilter || 'all'}
+					onValueChange={(value) => {
+						setStatusFilter(value === 'all' ? '' : value);
+						setPage(1); // Reset to first page on filter change
+					}}>
+					<SelectTrigger className="w-[180px]">
+						<SelectValue placeholder="All Statuses" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="all">All Statuses</SelectItem>
+						<SelectItem value="saved">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-slate-500" />
+								Saved
+							</div>
+						</SelectItem>
+						<SelectItem value="applied">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-blue-500" />
+								Applied
+							</div>
+						</SelectItem>
+						<SelectItem value="interviewing">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-purple-500" />
+								Interviewing
+							</div>
+						</SelectItem>
+						<SelectItem value="offered">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-green-500" />
+								Offered
+							</div>
+						</SelectItem>
+						<SelectItem value="rejected">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-red-500" />
+								Rejected
+							</div>
+						</SelectItem>
+						<SelectItem value="accepted">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-emerald-500" />
+								Accepted
+							</div>
+						</SelectItem>
+						<SelectItem value="withdrawn">
+							<div className="flex items-center gap-2">
+								<span className="w-2 h-2 rounded-full bg-orange-500" />
+								Withdrawn
+							</div>
+						</SelectItem>
+					</SelectContent>
+				</Select>
+			</div>
+
 			{/* Jobs Table */}
-			<Card>
-				<CardContent>
+			<div>
+				<div>
 					{!jobsData && !error ? (
 						<div className="flex items-center justify-center py-8">
 							<Spinner variant="pinwheel" />
@@ -326,8 +425,8 @@ export function JobsList() {
 							/>
 						</>
 					)}
-				</CardContent>
-			</Card>
+				</div>
+			</div>
 
 			{/* View Sheet */}
 			<Sheet open={viewSheetOpen} onOpenChange={setViewSheetOpen}>

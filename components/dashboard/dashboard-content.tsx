@@ -9,9 +9,11 @@ import {
 	IconCalendar,
 	IconChecks,
 	IconClock,
+	IconArrowRight,
 } from '@tabler/icons-react';
 import { SimpleTable } from '@/components/simple-table';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { JobStatsChart } from '@/components/dashboard/job-stats-chart';
 
 interface Job {
@@ -35,9 +37,13 @@ export function DashboardContent() {
 		{
 			key: 'title',
 			header: 'Job Title',
-			render: (value: unknown, row: Job) => (
+			render: (value: string, row: Job) => (
 				<div>
-					<div className="font-medium">{String(value)}</div>
+					<div className="font-medium">
+						{String(value).length > 50
+							? String(value).slice(0, 50) + '...'
+							: value}
+					</div>
 					<div className="text-xs text-muted-foreground">
 						{row.company_name}
 					</div>
@@ -47,36 +53,33 @@ export function DashboardContent() {
 		{
 			key: 'job_type',
 			header: 'Type',
-			render: (value: unknown) => (
-				<span className="max-w-xs truncate block capitalize">
-					{value ? String(value).replace('-', ' ') : '-'}
-				</span>
+			render: (value: unknown, row: Job) => (
+				<div>
+					<div className="font-medium">
+						<span className="max-w-xs truncate block capitalize">
+							{value ? String(value).replace('-', ' ') : '-'}
+						</span>
+					</div>
+					<div className="text-xs text-muted-foreground">
+						{row.work_mode ?? ''}
+					</div>
+				</div>
 			),
 		},
-		{
-			key: 'work_mode',
-			header: 'Mode',
-			render: (value: unknown) => (
-				<span className="max-w-xs truncate block capitalize">
-					{value ? String(value) : '-'}
-				</span>
-			),
-		},
+		// {
+		// 	key: 'work_mode',
+		// 	header: 'Mode',
+		// 	render: (value: unknown) => (
+		// 		<span className="max-w-xs truncate block capitalize">
+		// 			{value ? String(value) : '-'}
+		// 		</span>
+		// 	),
+		// },
 		{
 			key: 'deadline',
 			header: 'Deadline',
 			render: (value: unknown) =>
 				value ? new Date(String(value)).toLocaleDateString() : '-',
-		},
-	];
-
-	const actions = [
-		{
-			label: 'View',
-			onClick: () => {
-				router.push('/app/jobs');
-			},
-			variant: 'secondary' as const,
 		},
 	];
 
@@ -117,137 +120,222 @@ export function DashboardContent() {
 
 	const stats = data?.stats;
 	const recentJobs = data?.recentNotAppliedJobs || [];
-	const rejectedJobs = data?.rejectedJobs || [];
+	const interviewingJobs = data?.interviewingJobs || [];
 
 	return (
 		<div className="space-y-6">
-			{/* Stats Cards and Pie Chart Grid */}
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-				<Card className="border-l-4 border-l-[hsl(var(--chart-1))] bg-gradient-to-br from-[hsl(var(--chart-1))]/5 to-transparent">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Applied Jobs</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-1))]/20 p-2">
-							<IconChecks className="h-4 w-4 text-[hsl(var(--chart-1))]" />
+			{/* Stats Cards - Minimalistic Black/White Design */}
+			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+				{/* Applied Jobs Card */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 hover:shadow-lg">
+					<div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-foreground/5 to-transparent rounded-full -mr-16 -mt-16" />
+					<CardHeader className="space-y-0 pb-4">
+						<div className="flex items-start justify-between">
+							<div className="space-y-1">
+								<CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+									Applied
+								</CardTitle>
+								<div className="text-4xl font-bold tracking-tight">
+									{stats?.applied || 0}
+								</div>
+							</div>
+							<div className="rounded-xl bg-foreground text-background p-3 group-hover:scale-110 transition-transform duration-300">
+								<IconChecks className="h-5 w-5" strokeWidth={2.5} />
+							</div>
 						</div>
 					</CardHeader>
-					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-1))]">
-							{stats?.applied || 0}
+					<CardContent className="pt-0">
+						<div className="flex items-center gap-2 text-xs text-muted-foreground">
+							<div className="h-px flex-1 bg-border" />
+							<span>Jobs submitted</span>
 						</div>
-						<p className="text-xs text-muted-foreground mt-1">
-							Jobs you&apos;ve applied to
-						</p>
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-[hsl(var(--chart-3))] bg-gradient-to-br from-[hsl(var(--chart-3))]/5 to-transparent">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Yet to Apply</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-3))]/20 p-2">
-							<IconBriefcase className="h-4 w-4 text-[hsl(var(--chart-3))]" />
+				{/* Yet to Apply Card */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 hover:shadow-lg">
+					<div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-foreground/5 to-transparent rounded-full -mr-16 -mt-16" />
+					<CardHeader className="space-y-0 pb-4">
+						<div className="flex items-start justify-between">
+							<div className="space-y-1">
+								<CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+									Pending
+								</CardTitle>
+								<div className="text-4xl font-bold tracking-tight">
+									{stats?.notApplied || 0}
+								</div>
+							</div>
+							<div className="rounded-xl bg-foreground text-background p-3 group-hover:scale-110 transition-transform duration-300">
+								<IconBriefcase className="h-5 w-5" strokeWidth={2.5} />
+							</div>
 						</div>
 					</CardHeader>
-					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-3))]">
-							{stats?.notApplied || 0}
+					<CardContent className="pt-0">
+						<div className="flex items-center gap-2 text-xs text-muted-foreground">
+							<div className="h-px flex-1 bg-border" />
+							<span>Awaiting action</span>
 						</div>
-						<p className="text-xs text-muted-foreground mt-1">
-							Saved jobs not applied
-						</p>
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-[hsl(var(--chart-4))] bg-gradient-to-br from-[hsl(var(--chart-4))]/5 to-transparent">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Deadline Today
-						</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-4))]/20 p-2">
-							<IconClock className="h-4 w-4 text-[hsl(var(--chart-4))]" />
+				{/* Deadline Today Card */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 hover:shadow-lg">
+					<div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-foreground/5 to-transparent rounded-full -mr-16 -mt-16" />
+					<CardHeader className="space-y-0 pb-4">
+						<div className="flex items-start justify-between">
+							<div className="space-y-1">
+								<CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+									Due Today
+								</CardTitle>
+								<div className="text-4xl font-bold tracking-tight">
+									{stats?.deadlineToday || 0}
+								</div>
+							</div>
+							<div className="rounded-xl bg-foreground text-background p-3 group-hover:scale-110 transition-transform duration-300">
+								<IconClock className="h-5 w-5" strokeWidth={2.5} />
+							</div>
 						</div>
 					</CardHeader>
-					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-4))]">
-							{stats?.deadlineToday || 0}
+					<CardContent className="pt-0">
+						<div className="flex items-center gap-2 text-xs text-muted-foreground">
+							<div className="h-px flex-1 bg-border" />
+							<span>Urgent attention</span>
 						</div>
-						<p className="text-xs text-muted-foreground mt-1">
-							Applications due today
-						</p>
 					</CardContent>
 				</Card>
 
-				<Card className="border-l-4 border-l-[hsl(var(--chart-5))] bg-gradient-to-br from-[hsl(var(--chart-5))]/5 to-transparent">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Deadline This Week
-						</CardTitle>
-						<div className="rounded-full bg-[hsl(var(--chart-5))]/20 p-2">
-							<IconCalendar className="h-4 w-4 text-[hsl(var(--chart-5))]" />
+				{/* Deadline This Week Card */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 hover:shadow-lg">
+					<div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-foreground/5 to-transparent rounded-full -mr-16 -mt-16" />
+					<CardHeader className="space-y-0 pb-4">
+						<div className="flex items-start justify-between">
+							<div className="space-y-1">
+								<CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+									Deadline in Week
+								</CardTitle>
+								<div className="text-4xl font-bold tracking-tight">
+									{stats?.deadlineWeek || 0}
+								</div>
+							</div>
+							<div className="rounded-xl bg-foreground text-background p-3 group-hover:scale-110 transition-transform duration-300">
+								<IconCalendar className="h-5 w-5" strokeWidth={2.5} />
+							</div>
 						</div>
 					</CardHeader>
-					<CardContent>
-						<div className="text-3xl font-bold text-[hsl(var(--chart-5))]">
-							{stats?.deadlineWeek || 0}
+					<CardContent className="pt-0">
+						<div className="flex items-center gap-2 text-xs text-muted-foreground">
+							<div className="h-px flex-1 bg-border" />
+							<span>Next 7 days</span>
 						</div>
-						<p className="text-xs text-muted-foreground mt-1">
-							Due within 7 days
-						</p>
 					</CardContent>
 				</Card>
 			</div>
 
-			{/* Recent Not Applied Jobs Table and Chart */}
-			<div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
-				<div className="lg:col-span-2 order-2 lg:order-1">
-					<Card className="border-t-2 border-t-[hsl(var(--chart-3))]">
-						<CardHeader className="bg-gradient-to-r from-[hsl(var(--chart-3))]/5 to-transparent">
-							<CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-								<span className="h-5 w-1 bg-[hsl(var(--chart-3))] rounded-full"></span>
-								Recent Jobs Not Applied
-							</CardTitle>
-						</CardHeader>
-						<CardContent className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
-							{recentJobs.length === 0 ? (
-								<p className="text-sm text-muted-foreground text-center py-8">
-									No saved jobs found. Start adding jobs to track!
+			{/* Recent Jobs and Interviewing Jobs - Side by Side */}
+			<div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+				{/* Recent Jobs Not Applied */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 flex flex-col">
+					<div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-foreground/5 to-transparent rounded-full -ml-20 -mb-20" />
+					<CardHeader className="border-b shrink-0">
+						<div className="flex items-center justify-between">
+							<div className="flex-1">
+								<CardTitle className="text-lg font-semibold tracking-tight">
+									Recent Jobs
+								</CardTitle>
+								<p className="text-xs text-muted-foreground mt-1">
+									Jobs saved but not yet applied
 								</p>
-							) : (
-								<SimpleTable
-									data={recentJobs}
-									columns={columns}
-									actions={actions}
-									showPagination={false}
-								/>
-							)}
-						</CardContent>
-					</Card>
-				</div>
-				<div className="lg:col-span-1 order-1 lg:order-2">
-					<JobStatsChart />
-				</div>
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="ghost"
+									size="sm"
+									onClick={() => router.push('/app/jobs?status=saved')}
+									className="gap-1">
+									View All
+									<IconArrowRight className="h-4 w-4" />
+								</Button>
+							</div>
+						</div>
+					</CardHeader>
+					<CardContent className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0 flex-1">
+						{recentJobs.length === 0 ? (
+							<div className="flex flex-col items-center justify-center py-12 text-center">
+								<div className="rounded-full bg-muted p-4 mb-4">
+									<IconBriefcase className="h-8 w-8 text-muted-foreground" />
+								</div>
+								<p className="text-sm font-medium mb-1">No saved jobs</p>
+								<p className="text-xs text-muted-foreground max-w-xs">
+									Start adding jobs to track your applications
+								</p>
+							</div>
+						) : (
+							<SimpleTable
+								data={recentJobs}
+								columns={columns}
+								showPagination={false}
+							/>
+						)}
+					</CardContent>
+				</Card>
+
+				{/* Interviewing Jobs */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 flex flex-col">
+					<div className="absolute bottom-0 right-0 w-40 h-40 bg-gradient-to-tl from-foreground/5 to-transparent rounded-full -mr-20 -mb-20" />
+					<CardHeader className="border-b shrink-0">
+						<div className="flex items-center justify-between">
+							<div className="flex-1">
+								<CardTitle className="text-lg font-semibold tracking-tight">
+									Interviewing
+								</CardTitle>
+								<p className="text-xs text-muted-foreground mt-1">
+									Active interview processes
+								</p>
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="ghost"
+									size="sm"
+									onClick={() => router.push('/app/jobs?status=interviewing')}
+									className="gap-1">
+									View All
+									<IconArrowRight className="h-4 w-4" />
+								</Button>
+							</div>
+						</div>
+					</CardHeader>
+					<CardContent className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0 flex-1">
+						{interviewingJobs.length === 0 ? (
+							<div className="flex flex-col items-center justify-center py-12 text-center">
+								<div className="rounded-full bg-muted p-4 mb-4">
+									<IconChecks className="h-8 w-8 text-muted-foreground" />
+								</div>
+								<p className="text-sm font-medium mb-1">No interviews yet</p>
+								<p className="text-xs text-muted-foreground max-w-xs">
+									Keep applying to get interview opportunities!
+								</p>
+							</div>
+						) : (
+							<SimpleTable
+								data={interviewingJobs}
+								columns={columns}
+								showPagination={false}
+							/>
+						)}
+					</CardContent>
+				</Card>
 			</div>
 
-			{/* Rejected Jobs Table */}
-			<Card className="border-t-2 border-t-destructive">
-				<CardHeader className="bg-gradient-to-r from-destructive/5 to-transparent">
-					<CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-						<span className="h-5 w-1 bg-destructive rounded-full"></span>
-						Rejected Jobs
+			{/* Chart Section */}
+			<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300">
+				<div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-foreground/5 to-transparent rounded-full -ml-20 -mt-20" />
+				<CardHeader className="border-b">
+					<CardTitle className="text-lg font-semibold tracking-tight">
+						Application Overview
 					</CardTitle>
 				</CardHeader>
-				<CardContent className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
-					{rejectedJobs.length === 0 ? (
-						<p className="text-sm text-muted-foreground text-center py-8">
-							No rejected jobs found.
-						</p>
-					) : (
-						<SimpleTable
-							data={rejectedJobs}
-							columns={columns}
-							actions={actions}
-							showPagination={false}
-						/>
-					)}
+				<CardContent className="pt-6">
+					<JobStatsChart />
 				</CardContent>
 			</Card>
 		</div>
