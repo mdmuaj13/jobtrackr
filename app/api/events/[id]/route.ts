@@ -56,45 +56,18 @@ export async function PUT(
 
 		const {
 			title,
-			event_type,
-			description,
-			date,
-			time,
-			duration,
-			location,
-			meeting_link,
-			contact_person,
-			contact_email,
-			contact_phone,
-			notes,
-			reminder,
-			reminder_time,
-			status,
+			content,
+			schedule_date,
+			is_checked,
 		} = body;
 
 		// Prepare update object
 		const updateData: Record<string, unknown> = {
 			...(title !== undefined && { title }),
-			...(event_type !== undefined && { event_type }),
-			...(description !== undefined && { description }),
-			...(date !== undefined && { date: new Date(date) }),
-			...(time !== undefined && { time }),
-			...(duration !== undefined && { duration }),
-			...(location !== undefined && { location }),
-			...(meeting_link !== undefined && { meeting_link }),
-			...(contact_person !== undefined && { contact_person }),
-			...(contact_email !== undefined && { contact_email }),
-			...(contact_phone !== undefined && { contact_phone }),
-			...(notes !== undefined && { notes }),
-			...(reminder !== undefined && { reminder }),
-			...(reminder_time !== undefined && { reminder_time }),
-			...(status !== undefined && { status }),
+			...(content !== undefined && { content }),
+			...(schedule_date !== undefined && { schedule_date: schedule_date ? new Date(schedule_date) : null }),
+			...(is_checked !== undefined && { is_checked }),
 		};
-
-		// If status is changing to 'completed' and there's no existing completed_date, set it
-		if (status === 'completed' && !event.completed_date) {
-			updateData.completed_date = new Date();
-		}
 
 		const updatedEvent = await Event.findByIdAndUpdate(
 			id,

@@ -13,10 +13,7 @@ export async function GET(request: NextRequest) {
 
 		const { searchParams } = new URL(request.url);
 		const job_id = searchParams.get('job_id');
-		const status = searchParams.get('status');
-		const event_type = searchParams.get('event_type');
-		const from_date = searchParams.get('from_date');
-		const to_date = searchParams.get('to_date');
+		const is_checked = searchParams.get('is_checked');
 
 		const query: Record<string, unknown> = {
 			user_id: user?.id,
@@ -27,27 +24,13 @@ export async function GET(request: NextRequest) {
 			query.job_id = job_id;
 		}
 
-		if (status) {
-			query.status = status;
-		}
-
-		if (event_type) {
-			query.event_type = event_type;
-		}
-
-		if (from_date || to_date) {
-			query.date = {};
-			if (from_date) {
-				(query.date as Record<string, unknown>).$gte = new Date(from_date);
-			}
-			if (to_date) {
-				(query.date as Record<string, unknown>).$lte = new Date(to_date);
-			}
+		if (is_checked !== null) {
+			query.is_checked = is_checked === 'true';
 		}
 
 		const events = await Event.find(query)
 			.populate('job_id', 'title company_name status')
-			.sort({ date: 1, time: 1 });
+			.sort({ schedule_date: -1, createdAt: -1 });
 
 		return ApiSerializer.success(events, 'Events retrieved successfully');
 	} catch {
@@ -67,45 +50,23 @@ export async function POST(request: NextRequest) {
 		const {
 			job_id,
 			title,
-			event_type,
-			description,
-			date,
-			time,
-			duration,
-			location,
-			meeting_link,
-			contact_person,
-			contact_email,
-			contact_phone,
-			notes,
-			reminder,
-			reminder_time,
-			status,
+			content,
+			schedule_date,
+			is_checked,
 		} = body;
 
 		// Validate required fields
-		if (!job_id || !title || !event_type || !date) {
-			return ApiSerializer.error('Missing required fields: job_id, title, event_type, date', 400);
+		if (!job_id || !content) {
+			return ApiSerializer.error('Missing required fields: job_id, content', 400);
 		}
 
 		const event = new Event({
 			job_id,
 			user_id: user?.id,
 			title,
-			event_type,
-			description,
-			date: new Date(date),
-			time,
-			duration,
-			location,
-			meeting_link,
-			contact_person,
-			contact_email,
-			contact_phone,
-			notes,
-			reminder: reminder || false,
-			reminder_time,
-			status: status || 'scheduled',
+			content,
+			schedule_date: schedule_date ? new Date(schedule_date) : undefined,
+			is_checked: is_checked || false,
 		});
 
 		await event.save();
