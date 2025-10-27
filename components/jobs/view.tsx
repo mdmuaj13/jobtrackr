@@ -320,10 +320,10 @@ export function JobView({
 
 			{/* <Separator className="my-6" /> */}
 
-			{/* Events & Deadlines Section */}
-			{/* <div className="mt-6">
+			{/* Events Section */}
+			<div className="mt-6 pt-6 border-t">
 				<EventList jobId={job._id} />
-			</div> */}
+			</div>
 		</EntityView>
 	);
 }
