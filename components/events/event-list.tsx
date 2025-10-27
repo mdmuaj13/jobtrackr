@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,6 +22,9 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useEvents, updateEvent, deleteEvent } from '@/hooks/events';
+import { toast } from 'sonner';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 
 interface Event {
 	_id: string;
@@ -36,100 +39,102 @@ interface EventListProps {
 }
 
 export function EventList({ jobId }: EventListProps) {
-	const [events, setEvents] = useState<Event[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [showForm, setShowForm] = useState(false);
 	const [editingEvent, setEditingEvent] = useState<Event | undefined>();
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [eventToDelete, setEventToDelete] = useState<string | null>(null);
+	const [isDeleting, setIsDeleting] = useState(false);
 
-	const fetchEvents = async () => {
-		try {
-			const token = localStorage.getItem('token');
-			const response = await fetch(`/api/events?job_id=${jobId}`, {
-				headers: {
-					'Authorization': `Bearer ${token}`,
-				},
-			});
-			if (response.ok) {
-				const data = await response.json();
-				setEvents(data.data || []);
-			}
-		} catch (error) {
-			console.error('Failed to fetch events:', error);
-		} finally {
-			setLoading(false);
-		}
-	};
+	const {
+		data: eventsData,
+		error,
+		mutate: mutateEvents,
+	} = useEvents({ job_id: jobId });
 
-	useEffect(() => {
-		fetchEvents();
-	}, [jobId]);
+	const events = eventsData?.data || [];
+	const loading = !eventsData && !error;
 
 	const handleToggleChecked = async (eventId: string, currentValue: boolean) => {
 		try {
-			const token = localStorage.getItem('token');
-			const response = await fetch(`/api/events/${eventId}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`,
-				},
-				body: JSON.stringify({ is_checked: !currentValue }),
-			});
-
-			if (response.ok) {
-				fetchEvents();
-			}
+			await updateEvent(eventId, { is_checked: !currentValue });
+			mutateEvents();
+			toast.success('Event updated successfully');
 		} catch (error) {
 			console.error('Failed to update event:', error);
+			toast.error('Failed to update event');
 		}
 	};
 
 	const handleDelete = async () => {
 		if (!eventToDelete) return;
 
+		setIsDeleting(true);
 		try {
-			const token = localStorage.getItem('token');
-			const response = await fetch(`/api/events/${eventToDelete}`, {
-				method: 'DELETE',
-				headers: {
-					'Authorization': `Bearer ${token}`,
-				},
-			});
-
-			if (response.ok) {
-				fetchEvents();
-			}
+			await deleteEvent(eventToDelete);
+			toast.success('Event deleted successfully');
+			mutateEvents();
 		} catch (error) {
 			console.error('Failed to delete event:', error);
+			toast.error('Failed to delete event');
 		} finally {
+			setIsDeleting(false);
 			setDeleteDialogOpen(false);
 			setEventToDelete(null);
 		}
 	};
 
 	if (loading) {
-		return <div className="text-center py-4">Loading events...</div>;
+		return (
+			<div className="flex items-center justify-center py-8">
+				<Spinner variant="pinwheel" />
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<Card>
+				<CardContent className="pt-6">
+					<p className="text-center text-red-500">Failed to load events</p>
+				</CardContent>
+			</Card>
+		);
 	}
 
 	return (
 		<div className="space-y-4">
 			<div className="flex justify-between items-center">
 				<h3 className="text-lg font-semibold">Events</h3>
-				<Button
-					onClick={() => {
-						setEditingEvent(undefined);
-						setShowForm(true);
-					}}
-					size="sm"
-				>
-					<Plus className="h-4 w-4 mr-2" />
-					Add Event
-				</Button>
+				{!showForm && (
+					<Button
+						onClick={() => {
+							setEditingEvent(undefined);
+							setShowForm(true);
+						}}
+						size="sm"
+					>
+						<Plus className="h-4 w-4 mr-2" />
+						Add Event
+					</Button>
+				)}
 			</div>
 
-			{events.length === 0 ? (
+			<EventForm
+				isOpen={showForm}
+				onClose={() => {
+					setShowForm(false);
+					setEditingEvent(undefined);
+				}}
+				jobId={jobId}
+				event={editingEvent}
+				onSuccess={() => {
+					mutateEvents();
+					setShowForm(false);
+					setEditingEvent(undefined);
+				}}
+			/>
+
+			{events.length === 0 && !showForm ? (
 				<Card>
 					<CardContent className="pt-6">
 						<p className="text-center text-muted-foreground">
@@ -194,14 +199,6 @@ export function EventList({ jobId }: EventListProps) {
 				</div>
 			)}
 
-			<EventForm
-				open={showForm}
-				onOpenChange={setShowForm}
-				jobId={jobId}
-				event={editingEvent}
-				onSuccess={fetchEvents}
-			/>
-
 			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
@@ -211,8 +208,10 @@ export function EventList({ jobId }: EventListProps) {
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+						<AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+						<AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+							{isDeleting ? 'Deleting...' : 'Delete'}
+						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
