@@ -185,14 +185,14 @@ export function JobsList() {
 		{
 			key: 'title',
 			header: 'Job Title',
-			render: (value: string, row: Job) => (
-				<div>
-					<div className="font-medium">
+			render: (value: unknown, row: Job) => (
+				<div className="min-w-[200px] max-w-[300px]">
+					<div className="font-medium truncate">
 						{String(value).length > 50
 							? String(value).slice(0, 50) + '...'
-							: value}
+							: String(value)}
 					</div>
-					<div className="text-xs text-muted-foreground">
+					<div className="text-xs text-muted-foreground truncate">
 						{row.company_name}
 					</div>
 				</div>
@@ -203,7 +203,7 @@ export function JobsList() {
 			header: 'Status',
 			render: (value: unknown) => (
 				<span
-					className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(
+					className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize whitespace-nowrap ${getStatusColor(
 						String(value)
 					)}`}>
 					{String(value)}
@@ -217,60 +217,68 @@ export function JobsList() {
 				const salaryMin = row.salary_min;
 				const salaryMax = row.salary_max;
 
+				const formatSalary = (amount: number) => {
+					return amount >= 10000 ? `${amount / 1000}K` : amount.toString();
+				};
+
 				if (!salaryMin && !salaryMax) return <span>-</span>;
 				if (salaryMin && salaryMax) {
 					return (
-						<span className="max-w-xs truncate block">
-							{salaryMin} - {salaryMax} {row.salary_currency || 'USD'}
+						<span className="whitespace-nowrap">
+							{formatSalary(salaryMin)} - {formatSalary(salaryMax)}{' '}
+							{row.salary_currency || 'USD'}
 						</span>
 					);
 				}
 				return (
-					<span className="max-w-xs truncate block">
-						{salaryMin || salaryMax} {row.salary_currency || 'USD'}
+					<span className="whitespace-nowrap">
+						{formatSalary((salaryMin || salaryMax)!)}{' '}
+						{row.salary_currency || 'USD'}
 					</span>
 				);
 			},
 		},
 		{
 			key: 'job_type',
-			header: 'Type',
-			render: (value: unknown) => (
-				<span className="max-w-xs truncate block capitalize">
-					{value ? String(value).replace('-', ' ') : '-'}
-				</span>
-			),
-		},
-		{
-			key: 'work_mode',
-			header: 'Mode',
+			header: 'Type & Location',
 			render: (value: unknown, row: Job) => (
-				<div>
-					<div className="font-medium capitalize">
-						{value ? String(value) : '-'}
+				<div className="min-w-[150px]">
+					<div className="font-medium capitalize truncate">
+						{value ? String(value).replace('-', ' ') : '-'}
+						{row.work_mode && (
+							<span className="text-muted-foreground">
+								{' '}• {String(row.work_mode)}
+							</span>
+						)}
 					</div>
-					<div className="text-xs text-muted-foreground capitalize">
+					<div className="text-xs text-muted-foreground capitalize truncate">
 						{row.location
-							? row.location.length > 15
-								? row.location.slice(0, 15) + '...'
+							? row.location.length > 20
+								? row.location.slice(0, 20) + '...'
 								: row.location
 							: ''}
 					</div>
 				</div>
 			),
 		},
-		{
-			key: 'applied_date',
-			header: 'Applied Date',
-			render: (value: unknown) =>
-				value ? new Date(String(value)).toLocaleDateString() : '-',
-		},
-		{
-			key: 'deadline',
-			header: 'Deadline',
-			render: (value: unknown) =>
-				value ? new Date(String(value)).toLocaleDateString() : '-',
-		},
+		// {
+		// 	key: 'applied_date',
+		// 	header: 'Applied Date',
+		// 	render: (value: unknown) => (
+		// 		<span className="whitespace-nowrap">
+		// 			{value ? new Date(String(value)).toLocaleDateString() : '-'}
+		// 		</span>
+		// 	),
+		// },
+		// {
+		// 	key: 'deadline',
+		// 	header: 'Deadline',
+		// 	render: (value: unknown) => (
+		// 		<span className="whitespace-nowrap">
+		// 			{value ? new Date(String(value)).toLocaleDateString() : '-'}
+		// 		</span>
+		// 	),
+		// },
 	];
 
 	const actions = [
@@ -396,8 +404,8 @@ export function JobsList() {
 			</div>
 
 			{/* Jobs Table */}
-			<div>
-				<div>
+			<div className="w-full">
+				<div className="overflow-x-auto">
 					{!jobsData && !error ? (
 						<div className="flex items-center justify-center py-8">
 							<Spinner variant="pinwheel" />

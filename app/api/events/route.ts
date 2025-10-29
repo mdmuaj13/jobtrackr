@@ -14,6 +14,10 @@ export async function GET(request: NextRequest) {
 		const { searchParams } = new URL(request.url);
 		const job_id = searchParams.get('job_id');
 		const is_checked = searchParams.get('is_checked');
+		const page = parseInt(searchParams.get('page') || '1');
+		const limit = parseInt(searchParams.get('limit') || '10');
+
+		const skip = (page - 1) * limit;
 
 		const query: Record<string, unknown> = {
 			user_id: user?.id,
@@ -30,9 +34,20 @@ export async function GET(request: NextRequest) {
 
 		const events = await Event.find(query)
 			.populate('job_id', 'title company_name status')
-			.sort({ schedule_date: -1, createdAt: -1 });
+			.sort({ schedule_date: -1, createdAt: -1 })
+			.skip(skip)
+			.limit(limit);
 
-		return ApiSerializer.success(events, 'Events retrieved successfully');
+		const total = await Event.countDocuments(query);
+
+		const meta = {
+			total,
+			page,
+			limit,
+			totalPages: Math.ceil(total / limit),
+		};
+
+		return ApiSerializer.success(events, 'Events retrieved successfully', meta);
 	} catch {
 		return ApiSerializer.error('Failed to retrieve events');
 	}

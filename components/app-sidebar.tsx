@@ -7,6 +7,7 @@ import {
 	IconBuildingCastle,
 	IconSettings,
 	IconBuilding,
+	IconCalendarEvent,
 } from '@tabler/icons-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -44,6 +45,11 @@ const data = {
 			title: 'Companies',
 			url: '/app/companies',
 			icon: IconBuilding,
+		},
+		{
+			title: 'Events',
+			url: '/app/events',
+			icon: IconCalendarEvent,
 		},
 	],
 	navClouds: [],

@@ -169,75 +169,77 @@ export function SimpleTable<T = unknown>({
 	return (
 		<div className="w-full flex flex-col gap-6">
 			<div className="rounded-xl border border-border/40 bg-card shadow-sm overflow-hidden">
-				<Table style={columnSizeVars} className="w-full min-w-0">
-					<TableHeader className="bg-muted/30 border-b border-border/40">
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id} className="hover:bg-transparent">
-								{headerGroup.headers.map((header) => (
-									<TableHead
-										key={header.id}
-										colSpan={header.colSpan}
-										style={{
-											width: `calc(var(--header-${header?.id}-size) * 1px)`,
-										}}
-										className="relative font-semibold text-foreground/80 text-sm py-2 px-3 first:pl-4 last:pr-4 border-r border-border/40 last:border-r-0 select-none overflow-hidden">
-										<div className="flex items-center">
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext()
-												  )}
-										</div>
-										{header.column.getCanResize() && (
-											<div
-												onMouseDown={header.getResizeHandler()}
-												onTouchStart={header.getResizeHandler()}
-												onDoubleClick={() => header.column.resetSize()}
-												className="absolute -right-[2px] top-0 h-full w-1 cursor-col-resize bg-transparent hover:bg-border/60 active:bg-border transition-colors"
-												style={{
-													userSelect: 'none',
-													touchAction: 'none',
-												}}
-											/>
-										)}
-									</TableHead>
-								))}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row, index) => (
-								<TableRow
-									key={row.id || index}
-									className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors duration-150">
-									{row.getVisibleCells().map((cell) => (
-										<TableCell
-											key={cell.id}
+				<div className="overflow-x-auto">
+					<Table style={columnSizeVars} className="w-full">
+						<TableHeader className="bg-muted/30 border-b border-border/40">
+							{table.getHeaderGroups().map((headerGroup) => (
+								<TableRow key={headerGroup.id} className="hover:bg-transparent">
+									{headerGroup.headers.map((header) => (
+										<TableHead
+											key={header.id}
+											colSpan={header.colSpan}
 											style={{
-												width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+												width: `calc(var(--header-${header?.id}-size) * 1px)`,
 											}}
-											className="py-2 px-3 first:pl-4 last:pr-4 text-sm border-r border-border/40 last:border-r-0 overflow-hidden">
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
+											className="relative font-semibold text-foreground/80 text-sm py-3 px-4 first:pl-6 last:pr-6 border-r border-border/40 last:border-r-0 select-none whitespace-nowrap">
+											<div className="flex items-center">
+												{header.isPlaceholder
+													? null
+													: flexRender(
+															header.column.columnDef.header,
+															header.getContext()
+													  )}
+											</div>
+											{header.column.getCanResize() && (
+												<div
+													onMouseDown={header.getResizeHandler()}
+													onTouchStart={header.getResizeHandler()}
+													onDoubleClick={() => header.column.resetSize()}
+													className="absolute -right-[2px] top-0 h-full w-1 cursor-col-resize bg-transparent hover:bg-border/60 active:bg-border transition-colors"
+													style={{
+														userSelect: 'none',
+														touchAction: 'none',
+													}}
+												/>
 											)}
-										</TableCell>
+										</TableHead>
 									))}
 								</TableRow>
-							))
-						) : (
-							<TableRow className="hover:bg-transparent">
-								<TableCell
-									colSpan={tableColumns.length}
-									className="h-32 text-center text-muted-foreground text-sm py-8">
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
+							))}
+						</TableHeader>
+						<TableBody>
+							{table.getRowModel().rows?.length ? (
+								table.getRowModel().rows.map((row, index) => (
+									<TableRow
+										key={row.id || index}
+										className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors duration-150">
+										{row.getVisibleCells().map((cell) => (
+											<TableCell
+												key={cell.id}
+												style={{
+													width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+												}}
+												className="py-3 px-4 first:pl-6 last:pr-6 text-sm border-r border-border/40 last:border-r-0">
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
+											</TableCell>
+										))}
+									</TableRow>
+								))
+							) : (
+								<TableRow className="hover:bg-transparent">
+									<TableCell
+										colSpan={tableColumns.length}
+										className="h-32 text-center text-muted-foreground text-sm py-8">
+										No results.
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
+				</div>
 			</div>
 
 			{showPagination && table.getPageCount() > 1 && (
