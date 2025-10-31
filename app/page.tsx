@@ -17,7 +17,7 @@ export default function Home() {
 			<HomeHeader />
 			<HeroSection />
 			<ProblemSection />
-			<SolutionSection />
+			{/* <SolutionSection /> */}
 			<HowItWorksSection />
 			<FeaturesSection />
 			<DashboardShowcaseSection />

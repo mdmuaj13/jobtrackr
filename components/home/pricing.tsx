@@ -24,14 +24,14 @@ const PricingCard = ({
 	disabled = false,
 }: PricingCardProps) => (
 	<div
-		className={`relative rounded-xl p-8 border ${
+		className={`relative rounded-2xl p-8 border-2 ${
 			highlighted
-				? 'border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-800 shadow-xl scale-105'
-				: 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'
+				? 'border-primary bg-secondary/20 shadow-lg shadow-primary/20 scale-105'
+				: 'border-border bg-card shadow-sm'
 		}`}>
 		{badge && (
 			<div className="absolute -top-3 left-1/2 -translate-x-1/2">
-				<span className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs px-3 py-1 rounded-full">
+				<span className="bg-secondary text-secondary-foreground text-xs px-3 py-1 rounded-full font-medium">
 					{badge}
 				</span>
 			</div>
@@ -39,10 +39,10 @@ const PricingCard = ({
 
 		<div className="space-y-6">
 			<div>
-				<h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+				<h3 className="text-2xl font-bold text-card-foreground">
 					{title}
 				</h3>
-				<p className="text-4xl font-bold text-gray-900 dark:text-white mt-4">
+				<p className="text-4xl font-bold text-card-foreground mt-4">
 					{price}
 				</p>
 			</div>
@@ -50,8 +50,8 @@ const PricingCard = ({
 			<div className="space-y-3">
 				{features.map((feature, index) => (
 					<div key={index} className="flex items-start gap-2">
-						<Check className="w-5 h-5 text-gray-700 dark:text-gray-300 flex-shrink-0 mt-0.5" />
-						<span className="text-sm text-gray-600 dark:text-gray-400">
+						<Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+						<span className="text-sm text-muted-foreground">
 							{feature}
 						</span>
 					</div>
@@ -60,7 +60,7 @@ const PricingCard = ({
 
 			<Button
 				asChild={!disabled}
-				className="w-full"
+				className={`w-full ${highlighted ? 'bg-primary hover:bg-primary/90 text-primary-foreground' : 'border-2 hover:border-primary'}`}
 				variant={highlighted ? 'default' : 'outline'}
 				disabled={disabled}>
 				{disabled ? (
@@ -75,8 +75,17 @@ const PricingCard = ({
 
 export function PricingSection() {
 	return (
-		<section className="px-4 sm:px-6 py-16 md:py-20 bg-white dark:bg-gray-900">
+		<section className="px-4 sm:px-6 py-16 md:py-20 bg-muted/30">
 			<div className="max-w-7xl mx-auto">
+				<div className="text-center mb-16">
+					<h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+						Simple, Transparent Pricing
+					</h2>
+					<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+						Choose the plan that works best for your job search journey
+					</p>
+				</div>
+				
 				<div className="grid md:grid-cols-3 gap-8">
 					{/* FREE */}
 					<PricingCard

@@ -15,28 +15,28 @@ const TestimonialCard = ({
 	timeline,
 	metric,
 }: TestimonialProps) => (
-	<div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-4">
+	<div className="bg-card rounded-2xl p-6 border-2 border-border shadow-sm space-y-4 hover:shadow-md transition-shadow">
 		<div className="flex justify-center">
-			<div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-				<User className="w-8 h-8 text-gray-600 dark:text-gray-400" />
+			<div className="w-16 h-16 rounded-full bg-chart-1/40 flex items-center justify-center border-2 border-border">
+				<User className="w-8 h-8 text-primary" />
 			</div>
 		</div>
 
-		<p className="text-gray-900 dark:text-white text-center font-medium">
+		<p className="text-card-foreground text-center font-medium italic">
 			&quot;{quote}&quot;
 		</p>
 
 		<div className="text-center">
-			<p className="text-sm text-gray-900 dark:text-white font-semibold">
+			<p className="text-sm text-card-foreground font-semibold">
 				{name}
 			</p>
-			<p className="text-xs text-gray-600 dark:text-gray-400">
+			<p className="text-xs text-muted-foreground">
 				{title} | {timeline}
 			</p>
 		</div>
 
 		<div className="text-center">
-			<p className="text-2xl font-bold text-gray-900 dark:text-white">
+			<p className="text-2xl font-bold text-primary">
 				{metric}
 			</p>
 		</div>
@@ -76,8 +76,17 @@ export function TestimonialsSection() {
 	];
 
 	return (
-		<section className="px-4 sm:px-6 py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
+		<section className="px-4 sm:px-6 py-16 md:py-20 bg-muted/30">
 			<div className="max-w-7xl mx-auto">
+				<div className="text-center mb-16">
+					<h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+						Trusted by Successful Job Seekers
+					</h2>
+					<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+						Millions of professionals have transformed their job search with JobTrackr
+					</p>
+				</div>
+				
 				<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 					{testimonials.map((testimonial, index) => (
 						<TestimonialCard key={index} {...testimonial} />
