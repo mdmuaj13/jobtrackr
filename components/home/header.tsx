@@ -10,7 +10,7 @@ export function HomeHeader() {
 
 	return (
 		<header className="w-full border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-900 backdrop-blur-md z-50">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+			<div className="max-w-7xl mx-auto py-4">
 				<div className="flex justify-between items-center">
 					{/* Logo */}
 					<Link href="/" className="flex items-center gap-2">
