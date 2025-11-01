@@ -41,11 +41,11 @@ const data = {
 			url: '/app/calendar',
 			icon: IconFolder,
 		},
-		{
-			title: 'Companies',
-			url: '/app/companies',
-			icon: IconBuilding,
-		},
+		// {
+		// 	title: 'Companies',
+		// 	url: '/app/companies',
+		// 	icon: IconBuilding,
+		// },
 		{
 			title: 'Events',
 			url: '/app/events',

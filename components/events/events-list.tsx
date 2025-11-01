@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -36,6 +37,7 @@ interface Event {
 }
 
 export function EventsList() {
+	const router = useRouter();
 	const [createSheetOpen, setCreateSheetOpen] = useState(false);
 	const [editSheetOpen, setEditSheetOpen] = useState(false);
 	const [viewSheetOpen, setViewSheetOpen] = useState(false);
@@ -157,21 +159,6 @@ export function EventsList() {
 		// 	),
 		// },
 		{
-			key: 'job_id',
-			header: 'Job',
-			render: (value: unknown) => {
-				const job = value as PopulatedJob;
-				return (
-					<div className="max-w-xs">
-						<div className="font-medium truncate">{job?.title || '-'}</div>
-						<div className="text-sm text-muted-foreground truncate">
-							{job?.company_name || ''}
-						</div>
-					</div>
-				);
-			},
-		},
-		{
 			key: 'content',
 			header: 'Content',
 			render: (value: unknown, row: Event) => (
@@ -184,6 +171,26 @@ export function EventsList() {
 					</span>
 				</>
 			),
+		},
+		{
+			key: 'job_id',
+			header: 'Job',
+			render: (value: unknown) => {
+				const job = value as PopulatedJob;
+				return (
+					<div
+						className="max-w-xs cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+						onClick={(e) => {
+							e.stopPropagation();
+							router.push(`/app/jobs/${job?._id}`);
+						}}>
+						<div className="font-medium truncate">{job?.title || '-'}</div>
+						<div className="text-sm text-muted-foreground truncate">
+							{job?.company_name || ''}
+						</div>
+					</div>
+				);
+			},
 		},
 
 		{
@@ -277,6 +284,7 @@ export function EventsList() {
 								columns={columns}
 								actions={actions}
 								showPagination={false}
+								onRowClick={handleViewEvent}
 							/>
 							<Pagination
 								currentPage={page}

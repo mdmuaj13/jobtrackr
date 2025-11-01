@@ -17,10 +17,29 @@ interface RecentJob {
 	createdAt: string;
 }
 
+interface PopulatedJob {
+	_id: string;
+	title: string;
+	company_name: string;
+	status: string;
+}
+
+interface RecentEvent {
+	_id: string;
+	job_id: PopulatedJob;
+	title?: string;
+	content: string;
+	schedule_date?: string;
+	is_checked: boolean;
+	createdAt: string;
+	updatedAt: string;
+}
+
 interface DashboardData {
 	stats: DashboardStats;
 	recentNotAppliedJobs: RecentJob[];
 	interviewingJobs: RecentJob[];
+	recentEvents: RecentEvent[];
 }
 
 export function useDashboardStats() {

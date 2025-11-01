@@ -421,6 +421,7 @@ export function JobsList() {
 								columns={columns}
 								actions={actions}
 								showPagination={false}
+								onRowClick={handleViewJob}
 							/>
 							<Pagination
 								currentPage={page}

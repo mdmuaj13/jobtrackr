@@ -7,6 +7,7 @@ export interface User {
 	name: string;
 	role: string;
 	image?: string;
+	createdAt?: string;
 }
 
 export interface AuthState {

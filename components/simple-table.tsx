@@ -64,6 +64,7 @@ interface SimpleTableProps<T = unknown> {
 	actions?: Action<T>[];
 	showPagination?: boolean;
 	pageSize?: number;
+	onRowClick?: (row: T) => void;
 }
 
 export function SimpleTable<T = unknown>({
@@ -72,6 +73,7 @@ export function SimpleTable<T = unknown>({
 	actions,
 	showPagination = true,
 	pageSize = 10,
+	onRowClick,
 }: SimpleTableProps<T>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [pagination, setPagination] = React.useState({
@@ -120,7 +122,11 @@ export function SimpleTable<T = unknown>({
 											isLoading ||
 											(action.disabled ? action.disabled(row.original) : false)
 										}
-										className="hover:bg-muted/60 transition-colors">
+										className={
+											action.variant === 'destructive'
+												? 'transition-colors'
+												: 'hover:bg-muted/60 transition-colors'
+										}>
 										{isLoading ? 'Loading...' : action.label}
 									</Button>
 								);
@@ -212,14 +218,30 @@ export function SimpleTable<T = unknown>({
 								table.getRowModel().rows.map((row, index) => (
 									<TableRow
 										key={row.id || index}
-										className="border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors duration-150">
+										className={`border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors duration-150 ${
+											onRowClick ? 'cursor-pointer' : ''
+										}`}
+										onClick={
+											onRowClick ? () => onRowClick(row.original) : undefined
+										}>
 										{row.getVisibleCells().map((cell) => (
 											<TableCell
 												key={cell.id}
 												style={{
 													width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
 												}}
-												className="py-3 px-4 first:pl-6 last:pr-6 text-sm border-r border-border/40 last:border-r-0">
+												className="py-3 px-4 first:pl-6 last:pr-6 text-sm border-r border-border/40 last:border-r-0"
+												onClick={(e) => {
+													// Prevent row click when clicking on action buttons
+													if (
+														cell.column.id === 'actions' &&
+														e.target instanceof HTMLElement &&
+														(e.target.closest('button') ||
+															e.target.tagName === 'BUTTON')
+													) {
+														e.stopPropagation();
+													}
+												}}>
 												{flexRender(
 													cell.column.columnDef.cell,
 													cell.getContext()

@@ -194,35 +194,24 @@ export function JobForm({ onSuccess }: JobFormProps) {
 		<div className="flex flex-col h-full space-y-6 p-4 pt-4 overflow-y-auto">
 			<SheetHeader className="px-0">
 				<SheetTitle>Create Job</SheetTitle>
-				<SheetDescription>Add a new job to track.</SheetDescription>
+				{/* <SheetDescription>Add a new job to track.</SheetDescription> */}
 			</SheetHeader>
 
 			<form
 				onSubmit={handleSubmit}
 				className="flex-1 space-y-4 overflow-y-auto">
-				<div className="grid grid-cols-5 gap-4">
-					<div className="space-y-2 col-span-4">
-						<Label htmlFor="job_url">Job Posting URL</Label>
-						<Input
-							id="job_url"
-							name="job_url"
-							type="url"
-							placeholder="https://company.com/jobs/123"
-							value={formData.job_url}
-							onChange={handleChange}
-						/>
-					</div>
-					<div className="space-y-2 col-span-1 flex items-end">
-						<Button
-							type="button"
-							variant="outline"
-							className="w-full"
-							onClick={handleApiCall}
-							disabled={isLoading}>
-							Fetch Details
-						</Button>
-					</div>
+				<div className="space-y-2">
+					<Label htmlFor="job_url">Job Posting URL</Label>
+					<Input
+						id="job_url"
+						name="job_url"
+						type="url"
+						placeholder="https://company.com/jobs/123"
+						value={formData.job_url}
+						onChange={handleChange}
+					/>
 				</div>
+
 				<div className="space-y-2">
 					<Label htmlFor="title">Job Title *</Label>
 					<Input
@@ -371,18 +360,6 @@ export function JobForm({ onSuccess }: JobFormProps) {
 						name="deadline"
 						type="date"
 						value={formData.deadline}
-						onChange={handleChange}
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label htmlFor="job_url">Job Posting URL</Label>
-					<Input
-						id="job_url"
-						name="job_url"
-						type="url"
-						placeholder="https://company.com/jobs/123"
-						value={formData.job_url}
 						onChange={handleChange}
 					/>
 				</div>

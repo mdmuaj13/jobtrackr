@@ -10,11 +10,14 @@ import {
 	IconChecks,
 	IconClock,
 	IconArrowRight,
+	IconListCheck,
+	IconCircleDashed,
 } from '@tabler/icons-react';
 import { SimpleTable } from '@/components/simple-table';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { JobStatsChart } from '@/components/dashboard/job-stats-chart';
+import { RecentEvents } from '@/components/dashboard/recent-events';
 
 interface Job {
 	_id: string;
@@ -119,8 +122,10 @@ export function DashboardContent() {
 	}
 
 	const stats = data?.stats;
+	const eventStats = data?.eventStats;
 	const recentJobs = data?.recentNotAppliedJobs || [];
 	const interviewingJobs = data?.interviewingJobs || [];
+	const recentEvents = data?.recentEvents || [];
 
 	return (
 		<div className="space-y-6">
@@ -322,6 +327,95 @@ export function DashboardContent() {
 								showPagination={false}
 							/>
 						)}
+					</CardContent>
+				</Card>
+			</div>
+
+			{/* Recent Events Section - Optimized Layout */}
+			<div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+				{/* Event Statistics */}
+				{eventStats && (
+					<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300">
+						<div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-foreground/5 to-transparent rounded-full -ml-16 -mt-16" />
+						<CardHeader className="border-b">
+							<CardTitle className="text-lg font-semibold tracking-tight">
+								Event Stats
+							</CardTitle>
+							<p className="text-xs text-muted-foreground mt-1">
+								Overview of your events
+							</p>
+						</CardHeader>
+						<CardContent className="pt-6 space-y-3">
+							<div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+								<div className="flex items-center gap-3">
+									<div className="rounded-lg bg-foreground text-background p-2">
+										<IconCalendar className="h-4 w-4" strokeWidth={2.5} />
+									</div>
+									<span className="text-sm font-medium">Total Events</span>
+								</div>
+								<div className="text-2xl font-bold">{eventStats.total}</div>
+							</div>
+
+							<div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+								<div className="flex items-center gap-3">
+									<div className="rounded-lg bg-green-600 text-white p-2">
+										<IconChecks className="h-4 w-4" strokeWidth={2.5} />
+									</div>
+									<span className="text-sm font-medium">Completed</span>
+								</div>
+								<div className="text-2xl font-bold">{eventStats.completed}</div>
+							</div>
+
+							<div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+								<div className="flex items-center gap-3">
+									<div className="rounded-lg bg-orange-600 text-white p-2">
+										<IconCircleDashed className="h-4 w-4" strokeWidth={2.5} />
+									</div>
+									<span className="text-sm font-medium">Pending</span>
+								</div>
+								<div className="text-2xl font-bold">{eventStats.pending}</div>
+							</div>
+
+							<div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+								<div className="flex items-center gap-3">
+									<div className="rounded-lg bg-blue-600 text-white p-2">
+										<IconListCheck className="h-4 w-4" strokeWidth={2.5} />
+									</div>
+									<span className="text-sm font-medium">Upcoming</span>
+								</div>
+								<div className="text-2xl font-bold">{eventStats.upcoming}</div>
+							</div>
+						</CardContent>
+					</Card>
+				)}
+
+				{/* Recent Events List */}
+				<Card className="group relative overflow-hidden border-2 hover:border-foreground transition-all duration-300 lg:col-span-2">
+					<div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-foreground/5 to-transparent rounded-full -mr-20 -mt-20" />
+					<CardHeader className="border-b">
+						<div className="flex items-center justify-between">
+							<div className="flex-1">
+								<CardTitle className="text-lg font-semibold tracking-tight">
+									Recent Events
+								</CardTitle>
+								<p className="text-xs text-muted-foreground mt-1">
+									Your latest job-related activities
+								</p>
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="ghost"
+									size="sm"
+									onClick={() => router.push('/app/events')}
+									className="gap-1">
+									View All
+									<IconArrowRight className="h-4 w-4" />
+								</Button>
+							</div>
+						</div>
+					</CardHeader>
+					<CardContent className="pt-6 pb-6">
+						<RecentEvents events={recentEvents} />
 					</CardContent>
 				</Card>
 			</div>

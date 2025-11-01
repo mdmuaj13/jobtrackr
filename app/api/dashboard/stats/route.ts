@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import connectDB from '@/lib/db';
 import Job from '@/models/Job';
+import Event from '@/models/Event';
 import { authenticateToken } from '@/lib/auth';
 import { ApiSerializer } from '@/types';
 
@@ -69,6 +70,40 @@ export async function GET(req: NextRequest) {
 			.limit(5)
 			.lean();
 
+		// Get last 5 recent events with populated job data
+		const recentEvents = await Event.find({
+			deletedAt: null,
+			user_id: user?.id
+		})
+			.populate('job_id', 'title company_name status')
+			.sort({ createdAt: -1 })
+			.limit(5)
+			.lean();
+
+		// Event statistics
+		const totalEventsCount = await Event.countDocuments({
+			deletedAt: null,
+			user_id: user?.id
+		});
+
+		const completedEventsCount = await Event.countDocuments({
+			deletedAt: null,
+			user_id: user?.id,
+			is_checked: true
+		});
+
+		const pendingEventsCount = await Event.countDocuments({
+			deletedAt: null,
+			user_id: user?.id,
+			is_checked: false
+		});
+
+		const upcomingEventsCount = await Event.countDocuments({
+			deletedAt: null,
+			user_id: user?.id,
+			schedule_date: { $gte: todayStart }
+		});
+
 		return ApiSerializer.success({
 			stats: {
 				applied: appliedCount,
@@ -76,8 +111,15 @@ export async function GET(req: NextRequest) {
 				deadlineToday: deadlineTodayCount,
 				deadlineWeek: deadlineWeekCount
 			},
+			eventStats: {
+				total: totalEventsCount,
+				completed: completedEventsCount,
+				pending: pendingEventsCount,
+				upcoming: upcomingEventsCount
+			},
 			recentNotAppliedJobs,
-			interviewingJobs
+			interviewingJobs,
+			recentEvents
 		});
 	} catch (error) {
 		console.error('Dashboard stats error:', error);
