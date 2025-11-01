@@ -30,7 +30,7 @@
   --chart-3: 246 208 255; /* Pink #f6d0ff */
   --chart-4: 255 235 91; /* Yellow #ffeb5b */
   --chart-5: 213 245 194; /* Lime #D5F5C2 */
-  --sidebar: 252 250 245;
+  --sidebar: 240 238 230; /* Slightly darker muted shade */
   --sidebar-foreground: 26 51 0;
   --sidebar-primary: 26 51 0;
   --sidebar-primary-foreground: 255 233 92;
@@ -86,7 +86,7 @@
   --chart-3: 246 208 255;
   --chart-4: 255 235 91;
   --chart-5: 213 245 194;
-  --sidebar: 23 51 0;
+  --sidebar: 26 51 0; /* Slightly lighter than background */
   --sidebar-foreground: 252 250 245;
   --sidebar-primary: 255 233 92;
   --sidebar-primary-foreground: 26 51 0;

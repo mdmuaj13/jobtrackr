@@ -46,24 +46,24 @@ interface JobViewProps {
 	showFullscreenButton?: boolean;
 }
 
-const getStatusBadgeVariant = (status: Job['status']) => {
+const getStatusBadgeClass = (status: Job['status']) => {
 	switch (status) {
 		case 'saved':
-			return 'secondary';
+			return 'bg-chart-4 text-primary border-2 border-chart-4 font-semibold hover:bg-chart-4/80';
 		case 'applied':
-			return 'default';
+			return 'bg-chart-1 text-primary border-2 border-chart-1 font-semibold hover:bg-chart-1/80';
 		case 'interviewing':
-			return 'default';
+			return 'bg-chart-2 text-primary border-2 border-chart-2 font-semibold hover:bg-chart-2/80';
 		case 'offered':
-			return 'default';
+			return 'bg-chart-5 text-primary border-2 border-chart-5 font-semibold hover:bg-chart-5/80 shadow-sm';
 		case 'accepted':
-			return 'default';
+			return 'bg-chart-1 text-primary border-2 border-chart-1 font-semibold hover:bg-chart-1/80 shadow-md';
 		case 'rejected':
-			return 'destructive';
+			return 'bg-destructive/20 text-destructive border-2 border-destructive/40 font-semibold hover:bg-destructive/30';
 		case 'withdrawn':
-			return 'outline';
+			return 'bg-chart-3 text-primary border-2 border-chart-3 font-semibold hover:bg-chart-3/80';
 		default:
-			return 'secondary';
+			return 'bg-muted text-muted-foreground border-2 border-border';
 	}
 };
 
@@ -201,9 +201,9 @@ export function JobView({
 				<ViewField
 					label="Status"
 					value={
-						<Badge variant={getStatusBadgeVariant(job.status)}>
+						<span className={`inline-flex items-center px-3 py-1 rounded-full text-sm capitalize transition-colors ${getStatusBadgeClass(job.status)}`}>
 							{formatStatus(job.status)}
-						</Badge>
+						</span>
 					}
 				/>
 

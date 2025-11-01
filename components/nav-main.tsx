@@ -42,7 +42,9 @@ export function NavMain({
 		if (url === '/app/companies' && pathname.startsWith('/app/companies')) {
 			return true;
 		}
-
+		if (url === '/app/events' && pathname.startsWith('/app/events')) {
+			return true;
+		}
 		return false;
 	};
 

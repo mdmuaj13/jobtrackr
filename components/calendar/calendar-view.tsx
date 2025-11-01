@@ -34,6 +34,7 @@ export function CalendarView() {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 	const [isClosing, setIsClosing] = useState(false);
+	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
 	const events: CalendarEvent[] = useMemo(() => {
 		const eventList: CalendarEvent[] = [];
@@ -140,8 +141,8 @@ export function CalendarView() {
 		if (!selectedDate) return null;
 
 		return (
-			<Card className="h-full flex flex-col">
-				<CardHeader className="border-b">
+			<Card className="group relative overflow-hidden border-2 hover:border-chart-3 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-chart-3/5 to-transparent h-full flex flex-col">
+				<CardHeader className="border-b-2 border-chart-3/20 shrink-0">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg flex items-center gap-2">
 							<CalendarIcon className="h-5 w-5" />
@@ -151,7 +152,7 @@ export function CalendarView() {
 							variant="ghost"
 							size="icon"
 							onClick={handleClosePanel}
-							className="h-8 w-8"
+							className="h-8 w-8 hover:bg-destructive hover:text-destructive-foreground"
 						>
 							<X className="h-4 w-4" />
 						</Button>
@@ -163,13 +164,13 @@ export function CalendarView() {
 							<p className="text-sm">No jobs scheduled for this date</p>
 						</div>
 					) : (
-						<div className="divide-y">
+						<div className="divide-y divide-muted">
 							{selectedDateJobs.map((job) => {
 								const hasDeadline = job.deadline && isSameDay(new Date(job.deadline), selectedDate);
 								const hasAppliedDate = job.applied_date && isSameDay(new Date(job.applied_date), selectedDate);
 
 								return (
-									<div key={job._id} className="p-4 hover:bg-muted/50 transition-colors">
+									<div key={job._id} className="p-4 hover:bg-accent/30 transition-colors">
 										<div className="space-y-3">
 											<div>
 												<h3 className="font-semibold text-base mb-1">{job.title}</h3>
@@ -184,14 +185,16 @@ export function CalendarView() {
 													</Badge>
 												)}
 												{hasAppliedDate && (
-													<Badge variant="default" className="text-xs bg-green-500 hover:bg-green-400">
+													<Badge variant="default" className="text-xs bg-emerald-500 hover:bg-emerald-600">
 														<CalendarIcon className="h-3 w-3 mr-1" />
 														Applied
 													</Badge>
 												)}
-												{/* <Badge variant="outline" className="text-xs">
-													{job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-												</Badge> */}
+												{job.status && (
+													<Badge variant="outline" className="text-xs capitalize border-primary/30">
+														{job.status}
+													</Badge>
+												)}
 											</div>
 
 											<div className="space-y-1.5 text-sm text-muted-foreground">
@@ -222,9 +225,19 @@ export function CalendarView() {
 
 	if (isLoading) {
 		return (
-			<Card>
+			<Card className="group relative overflow-hidden border-2 hover:border-chart-5 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-chart-5/5 to-transparent">
 				<CardContent className="p-6">
-					<Skeleton className="h-[700px] w-full" />
+					<div className="mb-4 flex gap-4">
+						<div className="flex items-center gap-2">
+							<Skeleton className="w-4 h-4 rounded" />
+							<Skeleton className="h-4 w-16" />
+						</div>
+						<div className="flex items-center gap-2">
+							<Skeleton className="w-4 h-4 rounded" />
+							<Skeleton className="h-4 w-16" />
+						</div>
+					</div>
+					<Skeleton className="h-[700px] w-full rounded-lg" />
 				</CardContent>
 			</Card>
 		);
@@ -232,9 +245,9 @@ export function CalendarView() {
 
 	if (error) {
 		return (
-			<Card>
+			<Card className="group relative overflow-hidden border-2 hover:border-chart-5 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-chart-5/5 to-transparent">
 				<CardContent className="p-6">
-					<p className="text-center text-destructive">Failed to load calendar</p>
+					<p className="text-center text-destructive font-medium">Failed to load calendar</p>
 				</CardContent>
 			</Card>
 		);
@@ -244,16 +257,16 @@ export function CalendarView() {
 		<div className={`grid grid-cols-1 gap-4 ${isPanelOpen ? 'lg:grid-cols-3' : ''}`}>
 			{/* Calendar Section */}
 			<div className={isPanelOpen ? 'lg:col-span-2' : ''}>
-				<Card>
+				<Card className="group relative overflow-hidden border-2 hover:border-chart-5 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-chart-5/5 to-transparent">
 					<CardContent className="p-6">
 						<div className="mb-4 flex gap-4">
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-destructive rounded"></div>
-								<span className="text-sm">Deadline</span>
+								<span className="text-sm font-medium">Deadline</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-[hsl(var(--chart-1))] rounded"></div>
-								<span className="text-sm">Applied</span>
+								<div className="w-4 h-4 bg-emerald-500 rounded"></div>
+								<span className="text-sm font-medium">Applied</span>
 							</div>
 						</div>
 						<div className="h-[700px] calendar-container">
@@ -270,6 +283,11 @@ export function CalendarView() {
 								onSelectSlot={handleSelectSlot}
 								onSelectEvent={handleSelectEvent}
 								selectable
+								toolbar
+								views={['month', 'week', 'day']}
+								defaultView="month"
+								date={currentDate}
+								onNavigate={(newDate) => setCurrentDate(newDate)}
 							/>
 						</div>
 				<style jsx global>{`
@@ -278,7 +296,7 @@ export function CalendarView() {
 					}
 
 					.calendar-container .rbc-header {
-						@apply py-2.5 px-1 font-semibold text-sm border-b bg-muted;
+						@apply py-2.5 px-1 font-semibold text-sm border-b bg-muted rounded-t-md;
 					}
 
 					.calendar-container .rbc-today {
@@ -298,7 +316,7 @@ export function CalendarView() {
 					}
 
 					.calendar-container .rbc-month-view {
-						@apply border rounded-lg overflow-hidden;
+						@apply border-2 rounded-lg overflow-hidden bg-background/50;
 					}
 
 					.calendar-container .rbc-day-bg {
@@ -318,15 +336,16 @@ export function CalendarView() {
 					}
 
 					.calendar-container .rbc-date-cell.rbc-now a {
-						@apply font-bold bg-primary text-white w-7 h-7 rounded-full inline-flex items-center justify-center;
+						@apply font-bold bg-primary text-white w-7 h-7 rounded-full inline-flex items-center justify-center shadow-md;
 					}
 
 					.calendar-container .rbc-event {
-						@apply px-1 py-0.5 cursor-pointer;
+						@apply px-1 py-0.5 cursor-pointer rounded-sm shadow-sm;
 					}
 
 					.calendar-container .rbc-event:hover {
 						opacity: 1 !important;
+						@apply shadow-md;
 					}
 
 					.calendar-container .rbc-event-label {
@@ -334,28 +353,28 @@ export function CalendarView() {
 					}
 
 					.calendar-container .rbc-show-more {
-						@apply bg-primary text-primary-foreground text-xs py-0.5 px-1 rounded-sm m-0.5;
+						@apply bg-primary/80 text-primary-foreground text-xs py-0.5 px-1.5 rounded-sm m-0.5 shadow-sm;
 					}
 
 					.calendar-container .rbc-toolbar {
-						@apply py-2.5 mb-2.5 flex justify-between items-center;
+						@apply py-3 mb-3 flex justify-between items-center border-b border-gray-200 pb-4;
 					}
 
 					.calendar-container .rbc-toolbar button {
-						@apply py-1.5 px-3 border bg-background text-foreground rounded-md text-sm cursor-pointer transition-all duration-200;
+						@apply py-2 px-4 border-2 bg-background text-foreground rounded-md text-sm cursor-pointer transition-all duration-200 hover:bg-accent;
 					}
 
 					.calendar-container .rbc-toolbar button:hover {
-						@apply bg-accent;
+						@apply bg-accent border-primary text-primary;
 					}
 
 					.calendar-container .rbc-toolbar button:active,
 					.calendar-container .rbc-toolbar button.rbc-active {
-						@apply bg-primary text-primary-foreground border-primary;
+						@apply bg-primary text-primary-foreground border-primary shadow-md;
 					}
 
 					.calendar-container .rbc-toolbar-label {
-						@apply font-semibold text-lg;
+						@apply font-bold text-lg text-foreground;
 					}
 				`}</style>
 					</CardContent>

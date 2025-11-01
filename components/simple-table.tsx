@@ -105,7 +105,7 @@ export function SimpleTable<T = unknown>({
 				id: 'actions',
 				header: 'Actions',
 				cell: ({ row }: { row: { original: T } }) => (
-					<div className="flex items-center gap-2 justify-end">
+					<div className="flex items-center gap-2 justify-start">
 						{actions
 							.filter((action) => !action.show || action.show(row.original))
 							.map((action, index) => {
@@ -152,116 +152,78 @@ export function SimpleTable<T = unknown>({
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		defaultColumn: {
-			size: 200,
-			minSize: 100,
-			maxSize: 500,
-		},
-		enableColumnResizing: true,
-		columnResizeMode: 'onChange',
 	});
-
-	const columnSizeVars = React.useMemo(() => {
-		const headers = table.getFlatHeaders();
-		const colSizes: { [key: string]: number } = {};
-		for (let i = 0; i < headers.length; i++) {
-			const header = headers[i]!;
-			colSizes[`--header-${header.id}-size`] = header.getSize();
-			colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
-		}
-		return colSizes;
-	}, [table.getState().columnSizingInfo, table.getState().columnSizing]);
 
 	return (
 		<div className="w-full flex flex-col gap-6">
-			<div className="rounded-xl border border-border/40 bg-card shadow-sm overflow-hidden">
-				<div className="overflow-x-auto">
-					<Table style={columnSizeVars} className="w-full">
-						<TableHeader className="bg-muted/30 border-b border-border/40">
-							{table.getHeaderGroups().map((headerGroup) => (
-								<TableRow key={headerGroup.id} className="hover:bg-transparent">
-									{headerGroup.headers.map((header) => (
-										<TableHead
-											key={header.id}
-											colSpan={header.colSpan}
-											style={{
-												width: `calc(var(--header-${header?.id}-size) * 1px)`,
-											}}
-											className="relative font-semibold text-foreground/80 text-sm py-3 px-4 first:pl-6 last:pr-6 border-r border-border/40 last:border-r-0 select-none whitespace-nowrap">
-											<div className="flex items-center">
-												{header.isPlaceholder
-													? null
-													: flexRender(
-															header.column.columnDef.header,
-															header.getContext()
-													  )}
-											</div>
-											{header.column.getCanResize() && (
-												<div
-													onMouseDown={header.getResizeHandler()}
-													onTouchStart={header.getResizeHandler()}
-													onDoubleClick={() => header.column.resetSize()}
-													className="absolute -right-[2px] top-0 h-full w-1 cursor-col-resize bg-transparent hover:bg-border/60 active:bg-border transition-colors"
-													style={{
-														userSelect: 'none',
-														touchAction: 'none',
-													}}
-												/>
+			<div className="rounded-xl border-2 border-border/40 bg-card shadow-sm overflow-hidden hover:border-primary/20 transition-colors">
+				<Table className="w-full">
+					<TableHeader className="bg-muted/30 border-b-2 border-border/40">
+						{table.getHeaderGroups().map((headerGroup) => (
+							<TableRow key={headerGroup.id} className="hover:bg-transparent">
+								{headerGroup.headers.map((header) => (
+									<TableHead
+										key={header.id}
+										colSpan={header.colSpan}
+										className="relative font-semibold text-foreground/80 text-sm py-3 px-4 first:pl-6 last:pr-6 border-r border-border/40 last:border-r-0 select-none whitespace-nowrap">
+										<div className="flex items-center">
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef.header,
+														header.getContext()
+												  )}
+										</div>
+									</TableHead>
+								))}
+							</TableRow>
+						))}
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows?.length ? (
+							table.getRowModel().rows.map((row, index) => (
+								<TableRow
+									key={row.id || index}
+									className={`border-b border-border/30 last:border-0 hover:bg-gradient-to-r hover:from-chart-1/10 hover:to-transparent transition-all duration-200 ${
+										onRowClick ? 'cursor-pointer' : ''
+									}`}
+									onClick={
+										onRowClick ? () => onRowClick(row.original) : undefined
+									}>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell
+											key={cell.id}
+											className="py-3 px-4 first:pl-6 last:pr-6 text-sm border-r border-border/40 last:border-r-0"
+											onClick={(e) => {
+												// Prevent row click when clicking on action buttons
+												if (
+													cell.column.id === 'actions' &&
+													e.target instanceof HTMLElement &&
+													(e.target.closest('button') ||
+														e.target.tagName === 'BUTTON')
+												) {
+													e.stopPropagation();
+												}
+											}}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext()
 											)}
-										</TableHead>
+										</TableCell>
 									))}
 								</TableRow>
-							))}
-						</TableHeader>
-						<TableBody>
-							{table.getRowModel().rows?.length ? (
-								table.getRowModel().rows.map((row, index) => (
-									<TableRow
-										key={row.id || index}
-										className={`border-b border-border/40 last:border-0 hover:bg-muted/20 transition-colors duration-150 ${
-											onRowClick ? 'cursor-pointer' : ''
-										}`}
-										onClick={
-											onRowClick ? () => onRowClick(row.original) : undefined
-										}>
-										{row.getVisibleCells().map((cell) => (
-											<TableCell
-												key={cell.id}
-												style={{
-													width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-												}}
-												className="py-3 px-4 first:pl-6 last:pr-6 text-sm border-r border-border/40 last:border-r-0"
-												onClick={(e) => {
-													// Prevent row click when clicking on action buttons
-													if (
-														cell.column.id === 'actions' &&
-														e.target instanceof HTMLElement &&
-														(e.target.closest('button') ||
-															e.target.tagName === 'BUTTON')
-													) {
-														e.stopPropagation();
-													}
-												}}>
-												{flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext()
-												)}
-											</TableCell>
-										))}
-									</TableRow>
-								))
-							) : (
-								<TableRow className="hover:bg-transparent">
-									<TableCell
-										colSpan={tableColumns.length}
-										className="h-32 text-center text-muted-foreground text-sm py-8">
-										No results.
-									</TableCell>
-								</TableRow>
-							)}
-						</TableBody>
-					</Table>
-				</div>
+							))
+						) : (
+							<TableRow className="hover:bg-transparent">
+								<TableCell
+									colSpan={tableColumns.length}
+									className="h-32 text-center text-muted-foreground text-sm py-8">
+									No results.
+								</TableCell>
+							</TableRow>
+						)}
+					</TableBody>
+				</Table>
 			</div>
 
 			{showPagination && table.getPageCount() > 1 && (

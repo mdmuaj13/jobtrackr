@@ -163,21 +163,21 @@ export function JobsList() {
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case 'saved':
-				return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
+				return 'bg-chart-4 text-primary border-2 border-chart-4 font-semibold';
 			case 'applied':
-				return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+				return 'bg-chart-1 text-primary border-2 border-chart-1 font-semibold';
 			case 'interviewing':
-				return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
+				return 'bg-chart-2 text-primary border-2 border-chart-2 font-semibold';
 			case 'offered':
-				return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+				return 'bg-chart-5 text-primary border-2 border-chart-5 font-semibold';
 			case 'rejected':
-				return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+				return 'bg-destructive/20 text-destructive border-2 border-destructive/40 font-semibold';
 			case 'accepted':
-				return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
+				return 'bg-chart-1 text-primary border-2 border-chart-1 font-semibold shadow-md';
 			case 'withdrawn':
-				return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
+				return 'bg-chart-3 text-primary border-2 border-chart-3 font-semibold';
 			default:
-				return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
+				return 'bg-muted text-muted-foreground border-2 border-border';
 		}
 	};
 
@@ -359,43 +359,43 @@ export function JobsList() {
 						<SelectItem value="all">All Statuses</SelectItem>
 						<SelectItem value="saved">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-slate-500" />
+								<span className="w-3 h-3 rounded-full bg-chart-4 border-2 border-primary/20" />
 								Saved
 							</div>
 						</SelectItem>
 						<SelectItem value="applied">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-blue-500" />
+								<span className="w-3 h-3 rounded-full bg-chart-1 border-2 border-primary/20" />
 								Applied
 							</div>
 						</SelectItem>
 						<SelectItem value="interviewing">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-purple-500" />
+								<span className="w-3 h-3 rounded-full bg-chart-2 border-2 border-primary/20" />
 								Interviewing
 							</div>
 						</SelectItem>
 						<SelectItem value="offered">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-green-500" />
+								<span className="w-3 h-3 rounded-full bg-chart-5 border-2 border-primary/20" />
 								Offered
 							</div>
 						</SelectItem>
 						<SelectItem value="rejected">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-red-500" />
+								<span className="w-3 h-3 rounded-full bg-destructive border-2 border-destructive/40" />
 								Rejected
 							</div>
 						</SelectItem>
 						<SelectItem value="accepted">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-emerald-500" />
+								<span className="w-3 h-3 rounded-full bg-chart-1 border-2 border-primary/20 shadow-sm" />
 								Accepted
 							</div>
 						</SelectItem>
 						<SelectItem value="withdrawn">
 							<div className="flex items-center gap-2">
-								<span className="w-2 h-2 rounded-full bg-orange-500" />
+								<span className="w-3 h-3 rounded-full bg-chart-3 border-2 border-primary/20" />
 								Withdrawn
 							</div>
 						</SelectItem>
