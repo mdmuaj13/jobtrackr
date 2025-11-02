@@ -1,43 +1,68 @@
-import { Briefcase, Sparkles, LogIn, UserPlus } from 'lucide-react';
+'use client';
+
+import { Briefcase, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 export function HomeHeader() {
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
 	return (
-		<header className="w-full border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50">
-			<div className="max-w-6xl mx-auto py-4">
+		<header className="w-full border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-900 backdrop-blur-md z-50">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
 				<div className="flex justify-between items-center">
-					<div className="flex items-center space-x-2">
-						<div className="relative">
-							<Briefcase className="h-7 w-7 sm:h-8 sm:w-8 text-blue-600 dark:text-blue-400" />
-							<Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 absolute -top-1 -right-1" />
-						</div>
-						<span className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600">
+					{/* Logo */}
+					<Link href="/" className="flex items-center gap-2">
+						<Briefcase className="h-6 w-6 sm:h-7 sm:w-7 text-gray-900 dark:text-white" />
+						<span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
 							JobTrackr
 						</span>
-					</div>
-					<nav className="flex gap-2 sm:gap-3">
-						<Button
-							asChild
-							variant="ghost"
-							size="sm"
-							className="hidden sm:flex">
-							<Link href="/login" className="flex items-center gap-2">
-								<LogIn className="h-4 w-4" />
-								Login
-							</Link>
+					</Link>
+
+					{/* Desktop Navigation */}
+					<nav className="hidden md:flex items-center gap-3">
+						<Button asChild variant="ghost" size="sm">
+							<Link href="/login">Login</Link>
 						</Button>
-						<Button
-							asChild
-							size="sm"
-							className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
-							<Link href="/signup" className="flex items-center gap-2">
-								<UserPlus className="h-4 w-4 sm:flex hidden" />
-								<span className="text-sm sm:text-base">Get Started</span>
-							</Link>
+						<Button asChild size="sm">
+							<Link href="/signup">Get Started</Link>
 						</Button>
 					</nav>
+
+					{/* Mobile Menu Button */}
+					<button
+						onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+						className="md:hidden p-2 text-gray-900 dark:text-white"
+						aria-label="Toggle menu">
+						{mobileMenuOpen ? (
+							<X className="h-6 w-6" />
+						) : (
+							<Menu className="h-6 w-6" />
+						)}
+					</button>
 				</div>
+
+				{/* Mobile Menu */}
+				{mobileMenuOpen && (
+					<div className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+						<div className="flex flex-col gap-3">
+							<Button
+								asChild
+								variant="ghost"
+								className="w-full justify-start"
+								onClick={() => setMobileMenuOpen(false)}>
+								<Link href="/login">Login</Link>
+							</Button>
+							<Button
+								asChild
+								className="w-full"
+								onClick={() => setMobileMenuOpen(false)}>
+								<Link href="/signup">Get Started</Link>
+							</Button>
+						</div>
+					</div>
+				)}
 			</div>
 		</header>
 	);

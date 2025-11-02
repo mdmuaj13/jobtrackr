@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function SolutionSection() {
 	return (
-		<section className="px-4 py-20 bg-gray-50 dark:bg-gray-800">
+		<section className="px-4 sm:px-6 py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
 			<div className="max-w-7xl mx-auto">
 				<div className="grid md:grid-cols-2 gap-8 items-center">
 					{/* LEFT SIDE - BEFORE */}

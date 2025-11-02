@@ -27,7 +27,7 @@ export function TrustBadgesSection() {
 	];
 
 	return (
-		<section className="px-4 py-16 bg-gray-50 dark:bg-gray-800">
+		<section className="px-4 sm:px-6 py-12 md:py-16 bg-gray-50 dark:bg-gray-800">
 			<div className="max-w-7xl mx-auto">
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
 					{badges.map((badge, index) => (

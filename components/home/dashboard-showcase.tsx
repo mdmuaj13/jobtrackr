@@ -1,6 +1,6 @@
 export function DashboardShowcaseSection() {
 	return (
-		<section className="px-4 py-20 bg-white dark:bg-gray-900">
+		<section className="px-4 sm:px-6 py-16 md:py-20 bg-white dark:bg-gray-900">
 			<div className="max-w-7xl mx-auto">
 				<h2 className="text-2xl font-semibold text-center text-gray-900 dark:text-white mb-12">
 					Your entire job search, in one place
