@@ -11,7 +11,7 @@ export function getPasswordResetEmailHtml(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Your Password - JobTrackr</title>
+    <title>Reset Your Password - JobApplicate</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -21,7 +21,7 @@ export function getPasswordResetEmailHtml(
                     <!-- Header -->
                     <tr>
                         <td style="padding: 40px 40px 20px 40px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px 8px 0 0;">
-                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">JobTrackr</h1>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">JobApplicate</h1>
                         </td>
                     </tr>
 
@@ -35,7 +35,7 @@ export function getPasswordResetEmailHtml(
                             </p>
 
                             <p style="margin: 0 0 24px 0; color: #666666; font-size: 16px; line-height: 1.5;">
-                                We received a request to reset your password for your JobTrackr account. Click the button below to create a new password:
+                                We received a request to reset your password for your JobApplicate account. Click the button below to create a new password:
                             </p>
 
                             <!-- Button -->
@@ -75,10 +75,10 @@ export function getPasswordResetEmailHtml(
                     <tr>
                         <td style="padding: 24px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;">
                             <p style="margin: 0 0 8px 0; color: #999999; font-size: 12px; line-height: 1.5; text-align: center;">
-                                This is an automated message from JobTrackr. Please do not reply to this email.
+                                This is an automated message from JobApplicate. Please do not reply to this email.
                             </p>
                             <p style="margin: 0; color: #999999; font-size: 12px; line-height: 1.5; text-align: center;">
-                                © ${new Date().getFullYear()} JobTrackr. All rights reserved.
+                                © ${new Date().getFullYear()} JobApplicate. All rights reserved.
                             </p>
                         </td>
                     </tr>
@@ -99,11 +99,11 @@ export function getPasswordResetEmailText(
 	userName: string
 ): string {
 	return `
-JobTrackr - Reset Your Password
+JobApplicate - Reset Your Password
 
 Hi ${userName},
 
-We received a request to reset your password for your JobTrackr account.
+We received a request to reset your password for your JobApplicate account.
 
 To reset your password, click the link below or copy and paste it into your browser:
 
@@ -114,8 +114,8 @@ ${resetUrl}
 If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
 
 ---
-This is an automated message from JobTrackr. Please do not reply to this email.
-© ${new Date().getFullYear()} JobTrackr. All rights reserved.
+This is an automated message from JobApplicate. Please do not reply to this email.
+© ${new Date().getFullYear()} JobApplicate. All rights reserved.
 `;
 }
 
@@ -131,7 +131,7 @@ export function getPasswordResetConfirmationEmailHtml(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Reset Successful - JobTrackr</title>
+    <title>Password Reset Successful - JobApplicate</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -141,7 +141,7 @@ export function getPasswordResetConfirmationEmailHtml(
                     <!-- Header -->
                     <tr>
                         <td style="padding: 40px 40px 20px 40px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px 8px 0 0;">
-                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">JobTrackr</h1>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">JobApplicate</h1>
                         </td>
                     </tr>
 
@@ -161,7 +161,7 @@ export function getPasswordResetConfirmationEmailHtml(
                             </p>
 
                             <p style="margin: 0 0 24px 0; color: #666666; font-size: 16px; line-height: 1.5;">
-                                Your password has been successfully reset. You can now log in to your JobTrackr account using your new password.
+                                Your password has been successfully reset. You can now log in to your JobApplicate account using your new password.
                             </p>
 
                             <div style="padding: 16px; background-color: #e7f3ff; border-left: 4px solid #2196F3; border-radius: 4px; margin-bottom: 24px;">
@@ -180,10 +180,10 @@ export function getPasswordResetConfirmationEmailHtml(
                     <tr>
                         <td style="padding: 24px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;">
                             <p style="margin: 0 0 8px 0; color: #999999; font-size: 12px; line-height: 1.5; text-align: center;">
-                                This is an automated message from JobTrackr. Please do not reply to this email.
+                                This is an automated message from JobApplicate. Please do not reply to this email.
                             </p>
                             <p style="margin: 0; color: #999999; font-size: 12px; line-height: 1.5; text-align: center;">
-                                © ${new Date().getFullYear()} JobTrackr. All rights reserved.
+                                © ${new Date().getFullYear()} JobApplicate. All rights reserved.
                             </p>
                         </td>
                     </tr>
@@ -203,18 +203,18 @@ export function getPasswordResetConfirmationEmailText(
 	userName: string
 ): string {
 	return `
-JobTrackr - Password Reset Successful
+JobApplicate - Password Reset Successful
 
 Hi ${userName},
 
-Your password has been successfully reset. You can now log in to your JobTrackr account using your new password.
+Your password has been successfully reset. You can now log in to your JobApplicate account using your new password.
 
 🔒 Security Tip: For your security, make sure to use a strong, unique password that you don't use on other websites.
 
 If you didn't make this change or if you believe an unauthorized person has accessed your account, please contact our support team immediately.
 
 ---
-This is an automated message from JobTrackr. Please do not reply to this email.
-© ${new Date().getFullYear()} JobTrackr. All rights reserved.
+This is an automated message from JobApplicate. Please do not reply to this email.
+© ${new Date().getFullYear()} JobApplicate. All rights reserved.
 `;
 }

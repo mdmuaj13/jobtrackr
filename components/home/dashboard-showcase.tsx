@@ -31,7 +31,7 @@ export function DashboardShowcaseSection() {
 							<div className="w-3 h-3 rounded-full bg-primary"></div>
 						</div>
 						<div className="flex-1 mx-4 bg-muted rounded px-3 py-1 text-xs text-muted-foreground">
-							app.jobtrackr.com/dashboard
+							app.jobapplicate.com/dashboard
 						</div>
 					</div>
 

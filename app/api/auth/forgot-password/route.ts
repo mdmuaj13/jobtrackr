@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 			await resend.emails.send({
 				from: DEFAULT_FROM_EMAIL,
 				to: user.email,
-				subject: 'Reset Your Password - JobTrackr',
+				subject: 'Reset Your Password - JobApplicate',
 				html: getPasswordResetEmailHtml(resetUrl, user.name),
 				text: getPasswordResetEmailText(resetUrl, user.name),
 			});

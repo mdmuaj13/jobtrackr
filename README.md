@@ -1,4 +1,4 @@
-# JobTrackr
+# JobApplicate
 
 A modern, full-stack job application tracking system built with Next.js, React, TypeScript, and MongoDB. Track your job applications, interviews, deadlines, and career progress all in one place.
 
@@ -62,8 +62,8 @@ A modern, full-stack job application tracking system built with Next.js, React, 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/jobtrackr.git
-cd jobtrackr
+git clone https://github.com/yourusername/jobapplicate.git
+cd jobapplicate
 ```
 
 2. Install dependencies:
@@ -87,10 +87,10 @@ NEXTAUTH_URL=http://localhost:3000
 CLOUDINARY_API_KEY=your-cloudinary-api-key
 CLOUDINARY_API_SECRET=your-cloudinary-secret
 CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_PATH=jobtrackr
+CLOUDINARY_PATH=jobapplicate
 CLOUDINARY_PUBLIC_URL=https://res.cloudinary.com/your-cloud-name/image/upload
 RESEND_API_KEY=re_your_resend_api_key_here
-RESEND_FROM_EMAIL=JobTrackr <noreply@yourdomain.com>
+RESEND_FROM_EMAIL=JobApplicate <noreply@yourdomain.com>
 ```
 
 See [EMAIL_INTEGRATION.md](./EMAIL_INTEGRATION.md) for detailed email setup instructions.
@@ -114,7 +114,7 @@ bun run start
 ## Project Structure
 
 ```
-jobtrackr/
+jobapplicate/
 ├── app/                      # Next.js App Router
 │   ├── (auth)/              # Authentication routes (login, signup, etc.)
 │   ├── app/                 # Protected application routes

@@ -129,7 +129,7 @@ export function PricingSection() {
 							'1-on-1 Strategy Calls',
 						]}
 						buttonText="Contact Sales"
-						buttonHref="mailto:support@jobtrackr.com"
+						buttonHref="mailto:support@jobapplicate.com"
 					/>
 				</div>
 			</div>

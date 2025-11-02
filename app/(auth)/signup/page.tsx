@@ -24,7 +24,7 @@ export default function SignupPage() {
 								<Briefcase className="h-12 w-12" />
 								<Sparkles className="h-6 w-6 absolute -top-1 -right-1" />
 							</div>
-							<h1 className="text-4xl font-bold">JobTrackr</h1>
+							<h1 className="text-4xl font-bold">JobApplicate</h1>
 						</div>
 						<h2 className="text-3xl font-semibold leading-tight">
 							Start your journey to your dream career
@@ -71,7 +71,7 @@ export default function SignupPage() {
 							<Sparkles className="h-4 w-4 text-blue-500 absolute -top-1 -right-1" />
 						</div>
 						<span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
-							JobTrackr
+							JobApplicate
 						</span>
 					</Link>
 				</div>

@@ -83,7 +83,7 @@ export function TestimonialsSection() {
 						Trusted by Successful Job Seekers
 					</h2>
 					<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-						Millions of professionals have transformed their job search with JobTrackr
+						Millions of professionals have transformed their job search with JobApplicate
 					</p>
 				</div>
 				

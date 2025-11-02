@@ -1,10 +1,10 @@
 # Email Integration with Resend
 
-This document describes the email integration setup using Resend for JobTrackr.
+This document describes the email integration setup using Resend for JobApplicate.
 
 ## Overview
 
-JobTrackr uses [Resend](https://resend.com) as the email service provider for sending transactional emails. Resend provides a modern, developer-friendly API for sending emails with excellent deliverability.
+JobApplicate uses [Resend](https://resend.com) as the email service provider for sending transactional emails. Resend provides a modern, developer-friendly API for sending emails with excellent deliverability.
 
 ## Features
 
@@ -28,7 +28,7 @@ JobTrackr uses [Resend](https://resend.com) as the email service provider for se
 1. Log in to your Resend dashboard
 2. Navigate to **API Keys** section
 3. Click **Create API Key**
-4. Give it a name (e.g., "JobTrackr Development")
+4. Give it a name (e.g., "JobApplicate Development")
 5. Select appropriate permissions (Send emails)
 6. Copy the API key (starts with `re_`)
 
@@ -49,7 +49,7 @@ Add these variables to your `.env.local` file:
 ```env
 # Resend Email Service
 RESEND_API_KEY=re_your_actual_api_key_here
-RESEND_FROM_EMAIL=JobTrackr <noreply@yourdomain.com>
+RESEND_FROM_EMAIL=JobApplicate <noreply@yourdomain.com>
 
 # Application URL (used in email links)
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -84,7 +84,7 @@ Check your email inbox for the password reset email.
 
 **Trigger:** POST `/api/auth/forgot-password`
 
-**Subject:** Reset Your Password - JobTrackr
+**Subject:** Reset Your Password - JobApplicate
 
 **Content:**
 - Personalized greeting with user's name
@@ -104,7 +104,7 @@ Check your email inbox for the password reset email.
 
 **Trigger:** POST `/api/auth/reset-password` (after successful reset)
 
-**Subject:** Password Reset Successful - JobTrackr
+**Subject:** Password Reset Successful - JobApplicate
 
 **Content:**
 - Success notification
@@ -144,7 +144,7 @@ Example response in development when email fails:
 For production, you **must** use a verified domain:
 
 ```env
-RESEND_FROM_EMAIL=JobTrackr <noreply@yourdomain.com>
+RESEND_FROM_EMAIL=JobApplicate <noreply@yourdomain.com>
 ```
 
 Using `onboarding@resend.dev` in production is not recommended and may have limitations.
@@ -326,9 +326,9 @@ Send an email using Resend.
 **Example:**
 ```typescript
 await resend.emails.send({
-  from: 'JobTrackr <noreply@yourdomain.com>',
+  from: 'JobApplicate <noreply@yourdomain.com>',
   to: user.email,
-  subject: 'Reset Your Password - JobTrackr',
+  subject: 'Reset Your Password - JobApplicate',
   html: getPasswordResetEmailHtml(resetUrl, user.name),
   text: getPasswordResetEmailText(resetUrl, user.name),
 });
@@ -363,13 +363,13 @@ Send multiple emails at once:
 ```typescript
 await resend.batch.send([
   {
-    from: 'JobTrackr <noreply@yourdomain.com>',
+    from: 'JobApplicate <noreply@yourdomain.com>',
     to: 'user1@example.com',
     subject: 'Email 1',
     html: 'Content 1',
   },
   {
-    from: 'JobTrackr <noreply@yourdomain.com>',
+    from: 'JobApplicate <noreply@yourdomain.com>',
     to: 'user2@example.com',
     subject: 'Email 2',
     html: 'Content 2',
@@ -383,7 +383,7 @@ Schedule emails for future delivery:
 
 ```typescript
 await resend.emails.send({
-  from: 'JobTrackr <noreply@yourdomain.com>',
+  from: 'JobApplicate <noreply@yourdomain.com>',
   to: user.email,
   subject: 'Scheduled Email',
   html: 'Content',
@@ -433,4 +433,4 @@ Planned improvements:
 
 ## License
 
-This email integration is part of JobTrackr and follows the same license.
+This email integration is part of JobApplicate and follows the same license.

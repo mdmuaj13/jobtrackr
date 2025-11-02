@@ -2,7 +2,7 @@
 
 ## Overview
 
-The JobTrackr pricing module implements a comprehensive subscription and tier-based access control system. It supports three pricing tiers (Free, Pro, Custom) with specific feature limits and usage tracking.
+The JobApplicate pricing module implements a comprehensive subscription and tier-based access control system. It supports three pricing tiers (Free, Pro, Custom) with specific feature limits and usage tracking.
 
 ## Features
 
@@ -498,4 +498,4 @@ For questions or issues with the pricing module:
 
 ## License
 
-Part of JobTrackr application - Internal use only.
+Part of JobApplicate application - Internal use only.

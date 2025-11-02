@@ -43,11 +43,11 @@ export function BenefitsSection() {
 						</div>
 
 						<h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-							Why JobTrackr?
+							Why JobApplicate?
 						</h2>
 
 						<p className="text-lg text-muted-foreground">
-							Job hunting can be overwhelming. JobTrackr simplifies the
+							Job hunting can be overwhelming. JobApplicate simplifies the
 							process by giving you a centralized hub to manage everything,
 							with AI assistance every step of the way.
 						</p>

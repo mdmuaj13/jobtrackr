@@ -10,7 +10,7 @@ export function HomeFooter() {
 					<div className="space-y-3">
 						<div className="flex items-center gap-2">
 							<Briefcase className="h-6 w-6 text-primary" />
-							<span className="font-bold text-foreground">JobTrackr</span>
+							<span className="font-bold text-foreground">JobApplicate</span>
 						</div>
 						<p className="text-sm text-muted-foreground">
 							Track your way to success
@@ -58,7 +58,7 @@ export function HomeFooter() {
 							<Twitter className="w-5 h-5" />
 						</a>
 						<a
-							href="mailto:support@jobtrackr.com"
+							href="mailto:support@jobapplicate.com"
 							className="text-muted-foreground hover:text-primary transition-colors">
 							<Mail className="w-5 h-5" />
 						</a>
@@ -68,7 +68,7 @@ export function HomeFooter() {
 				{/* Bottom */}
 				<div className="pt-8 border-t-2 border-border text-center">
 					<p className="text-sm text-muted-foreground">
-						© 2025 JobTrackr. Made to help you win.
+						© 2025 JobApplicate. Made to help you win.
 					</p>
 				</div>
 			</div>

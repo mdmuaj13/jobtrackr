@@ -16,7 +16,7 @@ export function HomeHeader() {
 					<Link href="/" className="flex items-center gap-2">
 						<Briefcase className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
 						<span className="text-lg sm:text-xl font-bold text-foreground">
-							JobTrackr
+							JobApplicate
 						</span>
 					</Link>
 

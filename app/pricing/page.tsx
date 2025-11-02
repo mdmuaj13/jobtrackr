@@ -17,7 +17,7 @@ export default function PricingPage() {
 						<p className="text-muted-foreground">
 							Need help choosing?{' '}
 							<a
-								href="mailto:support@jobtrackr.com"
+								href="mailto:support@jobapplicate.com"
 								className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
 								Contact our team
 							</a>

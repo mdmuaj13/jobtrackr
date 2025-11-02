@@ -9,7 +9,7 @@ export function SolutionSection() {
 						The Solution: AI-Powered Organization
 					</h2>
 					<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-						JobTrackr transforms chaotic job searching into a streamlined, confident experience
+						JobApplicate transforms chaotic job searching into a streamlined, confident experience
 					</p>
 				</div>
 
