@@ -9,7 +9,7 @@ import {
 	IconBuilding,
 	IconCalendarEvent,
 } from '@tabler/icons-react';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, Crown } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
@@ -51,6 +51,11 @@ const data = {
 			title: 'Events',
 			url: '/app/events',
 			icon: IconCalendarEvent,
+		},
+		{
+			title: 'Subscription',
+			url: '/app/subscription',
+			icon: Crown,
 		},
 	],
 	navClouds: [],

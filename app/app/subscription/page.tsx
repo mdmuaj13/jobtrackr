@@ -374,7 +374,7 @@ export default function SubscriptionPage() {
               </li>
               <li className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4 text-primary" />
-                <span>200 AI chat messages per month</span>
+                <span>1000 AI chat messages per month</span>
               </li>
               <li className="flex items-center gap-2">
                 <Crown className="h-4 w-4 text-primary" />

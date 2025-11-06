@@ -92,10 +92,13 @@ export function PricingSection() {
 						title="FREE"
 						price="$0"
 						features={[
-							'Track apps',
-							'Calendar',
-							'Notes',
-							'Basic insights',
+							'100 jobs per month',
+							'20 AI chat messages per month',
+							'Manual job entry',
+							'Simple notes per job',
+							'Calendar access',
+							'Company management',
+							'Basic dashboard',
 						]}
 						buttonText="Start Free"
 					/>
@@ -103,19 +106,22 @@ export function PricingSection() {
 					{/* PRO */}
 					<PricingCard
 						title="PRO"
-						price="Coming Soon"
+						price="$10/mo"
 						features={[
-							'Everything in Free',
-							'AI Cover Letters',
-							'Interview Prep',
-							'Mock Interviews',
-							'AI Chat',
-							'Advanced Analytics',
+							'Unlimited jobs',
+							'1000 AI chat messages per month',
+							'AI-powered job entry',
+							'Detailed notes & follow-ups',
+							'Analytics dashboard',
+							'Application timeline',
+							'Email notifications',
+							'Data export',
+							'Priority support',
 						]}
-						buttonText="Join Waitlist"
+						buttonText="Get Started"
+						buttonHref="/signup"
 						highlighted={true}
 						badge="Most Popular"
-						disabled={true}
 					/>
 
 					{/* CUSTOM */}
@@ -124,9 +130,13 @@ export function PricingSection() {
 						price="Contact Sales"
 						features={[
 							'Everything in Pro',
-							'Dedicated Support',
-							'Priority Setup',
-							'1-on-1 Strategy Calls',
+							'Unlimited AI chat messages',
+							'Custom integrations',
+							'Dedicated support',
+							'Custom branding',
+							'API access',
+							'Priority setup',
+							'1-on-1 strategy calls',
 						]}
 						buttonText="Contact Sales"
 						buttonHref="mailto:support@jobapplicate.com"
