@@ -81,7 +81,8 @@ export class SubscriptionService {
   }
 
   /**
-   * Check if user can access chat
+   * Check if user can access chat feature
+   * Note: All tiers now have chat access, but with different message limits
    */
   static async canAccessChat(userId: string): Promise<SubscriptionCheckResult> {
     await connectDB();
@@ -92,7 +93,7 @@ export class SubscriptionService {
     if (!config.features.chatAccess) {
       return {
         allowed: false,
-        reason: 'Chat is not available on the Free plan. Upgrade to Pro to access chat features.',
+        reason: 'Chat is not available on your current plan.',
         tier,
       };
     }

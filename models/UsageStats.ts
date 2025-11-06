@@ -12,7 +12,6 @@ const usageStatsSchema = new Schema<IUsageStats>(
       type: String,
       required: true,
       unique: true,
-      index: true,
     },
 
     // Current month tracking
