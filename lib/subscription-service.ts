@@ -248,18 +248,25 @@ export class SubscriptionService {
 
   /**
    * Get subscription with usage stats
+   * Auto-creates free subscription if none exists
    */
   static async getSubscriptionWithUsage(userId: string): Promise<{
-    subscription: ISubscription | null;
+    subscription: ISubscription;
     usage: IUsageStats;
     tier: PricingTier;
     config: ReturnType<typeof getPricingConfig>;
   }> {
     await connectDB();
 
-    const subscription = await this.getUserSubscription(userId);
+    let subscription = await this.getUserSubscription(userId);
+
+    // Auto-create free subscription if none exists
+    if (!subscription) {
+      subscription = await this.initializeFreeSubscription(userId);
+    }
+
     const usage = await this.getUserUsage(userId);
-    const tier = subscription?.tier || PricingTier.FREE;
+    const tier = subscription.tier;
     const config = getPricingConfig(tier);
 
     return {

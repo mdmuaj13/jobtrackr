@@ -13,7 +13,7 @@ interface SubscriptionData {
     startDate: string;
     endDate?: string;
     paymentMethod: string;
-  } | null;
+  };
   usage: {
     jobsCreated: number;
     chatMessages: number;

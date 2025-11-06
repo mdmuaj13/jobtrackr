@@ -49,7 +49,7 @@ interface SubscriptionData {
     startDate: string;
     endDate?: string;
     paymentMethod: string;
-  } | null;
+  };
   usage: {
     jobsCreated: number;
     chatMessages: number;
@@ -179,9 +179,9 @@ export default function SubscriptionPage() {
               <div>
                 <CardTitle>{data.config.name} Plan</CardTitle>
                 <CardDescription>
-                  {data.subscription?.status === 'active'
+                  {data.subscription.status === 'active'
                     ? 'Your subscription is active'
-                    : 'Subscription status: ' + data.subscription?.status}
+                    : 'Subscription status: ' + data.subscription.status}
                 </CardDescription>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default function SubscriptionPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {data.subscription?.endDate && (
+          {data.subscription.endDate && (
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Next billing date:</span>
               <span className="font-medium">
@@ -216,7 +216,7 @@ export default function SubscriptionPage() {
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Payment method:</span>
             <span className="font-medium capitalize">
-              {data.subscription?.paymentMethod || 'None'}
+              {data.subscription.paymentMethod || 'None'}
             </span>
           </div>
         </CardContent>
