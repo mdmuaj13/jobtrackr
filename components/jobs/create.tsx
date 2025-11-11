@@ -237,14 +237,23 @@ export function JobForm({ onSuccess }: JobFormProps) {
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="location">Location</Label>
-						<Input
-							id="location"
-							name="location"
-							placeholder="e.g. New York, NY or Remote"
-							value={formData.location}
-							onChange={handleChange}
-						/>
+						<Label htmlFor="status">Status</Label>
+						<Select
+							value={formData.status}
+							onValueChange={(value) => handleSelectChange('status', value)}>
+							<SelectTrigger className="w-full">
+								<SelectValue placeholder="Select status" />
+							</SelectTrigger>
+							<SelectContent className="w-full">
+								<SelectItem value="saved">Saved</SelectItem>
+								<SelectItem value="applied">Applied</SelectItem>
+								<SelectItem value="interviewing">Interviewing</SelectItem>
+								<SelectItem value="offered">Offered</SelectItem>
+								<SelectItem value="rejected">Rejected</SelectItem>
+								<SelectItem value="accepted">Accepted</SelectItem>
+								<SelectItem value="withdrawn">Withdrawn</SelectItem>
+							</SelectContent>
+						</Select>
 					</div>
 				</div>
 
@@ -263,23 +272,14 @@ export function JobForm({ onSuccess }: JobFormProps) {
 
 				<div className="grid grid-cols-3 gap-4">
 					<div className="space-y-2">
-						<Label htmlFor="status">Status</Label>
-						<Select
-							value={formData.status}
-							onValueChange={(value) => handleSelectChange('status', value)}>
-							<SelectTrigger className="w-full">
-								<SelectValue placeholder="Select status" />
-							</SelectTrigger>
-							<SelectContent className="w-full">
-								<SelectItem value="saved">Saved</SelectItem>
-								<SelectItem value="applied">Applied</SelectItem>
-								<SelectItem value="interviewing">Interviewing</SelectItem>
-								<SelectItem value="offered">Offered</SelectItem>
-								<SelectItem value="rejected">Rejected</SelectItem>
-								<SelectItem value="accepted">Accepted</SelectItem>
-								<SelectItem value="withdrawn">Withdrawn</SelectItem>
-							</SelectContent>
-						</Select>
+						<Label htmlFor="location">Location</Label>
+						<Input
+							id="location"
+							name="location"
+							placeholder="e.g. New York, NY or Remote"
+							value={formData.location}
+							onChange={handleChange}
+						/>
 					</div>
 					<div className="space-y-2">
 						<Label htmlFor="job_type">Job Type</Label>

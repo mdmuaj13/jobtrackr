@@ -203,31 +203,18 @@ export function JobDetailsPageView({
 						/>
 
 						<ViewField
-							label="Location"
-							value={<p className="text-sm">{job.location || 'Not provided'}</p>}
+							label="Status"
+							value={
+								<span className={`inline-flex items-center px-3 py-1 rounded-full text-sm capitalize transition-colors ${getStatusBadgeClass(job.status)}`}>
+									{formatStatus(job.status)}
+								</span>
+							}
 						/>
 
-						<div className="grid grid-cols-2 gap-4">
+						<div className="grid grid-cols-3 gap-4">
 							<ViewField
-								label="Status"
-								value={
-									<span className={`inline-flex items-center px-3 py-1 rounded-full text-sm capitalize transition-colors ${getStatusBadgeClass(job.status)}`}>
-										{formatStatus(job.status)}
-									</span>
-								}
-							/>
-
-							<ViewField
-								label="Applied Date"
-								value={
-									<p className="text-sm">
-										{job.applied_date ? new Date(job.applied_date).toLocaleDateString('en-US', {
-											year: 'numeric',
-											month: 'long',
-											day: 'numeric',
-										}) : 'Not applied yet'}
-									</p>
-								}
+								label="Location"
+								value={<p className="text-sm">{job.location || 'Not provided'}</p>}
 							/>
 
 							<ViewField
@@ -240,6 +227,19 @@ export function JobDetailsPageView({
 								value={<p className="text-sm">{formatWorkMode(job.work_mode)}</p>}
 							/>
 						</div>
+
+						<ViewField
+							label="Applied Date"
+							value={
+								<p className="text-sm">
+									{job.applied_date ? new Date(job.applied_date).toLocaleDateString('en-US', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric',
+									}) : 'Not applied yet'}
+								</p>
+							}
+						/>
 
 						<ViewField
 							label="Salary Range"
